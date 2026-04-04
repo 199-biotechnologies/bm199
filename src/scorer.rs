@@ -68,8 +68,9 @@ impl Default for Bm199Params {
 impl Bm199Params {
     /// Per-term score for BM199
     pub fn score_term(&self, tf: f64, df: u64, dl: u64, avgdl: f64, n: u64) -> f64 {
-        let idf = idf_standard(df, n);
-        let max_idf = (n as f64).ln(); // approximate max IDF for normalization
+        // Robertson IDF without +1 floor: stronger discrimination for rare terms
+        let idf = idf_robertson(df, n);
+        let max_idf = ((n as f64 + 0.5) / 0.5).ln(); // max IDF when df=0
 
         // Adaptive saturation: rare terms (high IDF) saturate faster (lower exponent)
         let idf_ratio = (idf / max_idf).clamp(0.0, 1.0);
@@ -132,6 +133,16 @@ pub fn idf_standard(df: u64, n: u64) -> f64 {
     let n = n as f64;
     let df = df as f64;
     ((n - df + 0.5) / (df + 0.5) + 1.0).ln()
+}
+
+/// Robertson IDF (no +1 floor): log((N - df + 0.5) / (df + 0.5))
+/// Gives negative IDF for very common terms (df > N/2), which naturally downweights them.
+#[inline]
+pub fn idf_robertson(df: u64, n: u64) -> f64 {
+    let n = n as f64;
+    let df = df as f64;
+    let ratio = (n - df + 0.5) / (df + 0.5);
+    if ratio > 0.0 { ratio.ln() } else { 0.0 }
 }
 
 #[cfg(test)]
