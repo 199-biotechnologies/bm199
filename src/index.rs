@@ -34,6 +34,10 @@ pub struct InvertedIndex {
     pub avgdl: f64,
     /// Document frequency per term
     pub df: FxHashMap<String, u64>,
+    /// Collection frequency per term (total occurrences across all docs)
+    pub cf: FxHashMap<String, u64>,
+    /// Total tokens in corpus
+    pub total_tokens: u64,
 }
 
 impl InvertedIndex {
@@ -66,7 +70,14 @@ impl InvertedIndex {
             }
         }
 
-        Self { postings, doc_lengths, doc_ids, n, avgdl, df }
+        // Compute collection frequencies
+        let mut cf: FxHashMap<String, u64> = FxHashMap::default();
+        for (term, plist) in &postings {
+            let total: u64 = plist.iter().map(|p| p.tf as u64).sum();
+            cf.insert(term.clone(), total);
+        }
+
+        Self { postings, doc_lengths, doc_ids, n, avgdl, df, cf, total_tokens: total_len }
     }
 
     /// Retrieve documents matching query terms with BM25/BM25+/BM25L/BM199 scoring
@@ -102,6 +113,20 @@ impl InvertedIndex {
                     }
                     Bm25Variant::L => {
                         crate::scorer::bm25l(tf, df, dl, self.avgdl, self.n, k1, b, 0.5)
+                    }
+                    Bm25Variant::Atire => {
+                        crate::scorer::bm25_atire(tf, df, dl, self.avgdl, self.n, k1, b)
+                    }
+                    Bm25Variant::DLH13 => {
+                        let cf = self.cf.get(term).copied().unwrap_or(1);
+                        crate::scorer::dlh13(tf, dl, self.avgdl, self.n, cf)
+                    }
+                    Bm25Variant::QLD => {
+                        let cf = self.cf.get(term).copied().unwrap_or(1);
+                        crate::scorer::qld(tf, dl, cf, self.total_tokens, 2500.0)
+                    }
+                    Bm25Variant::TfIdf => {
+                        crate::scorer::tfidf(tf, df, self.n)
                     }
                 };
 
@@ -164,4 +189,8 @@ pub enum Bm25Variant {
     Standard,
     Plus,
     L,
+    Atire,
+    DLH13,
+    QLD,
+    TfIdf,
 }

@@ -124,6 +124,46 @@ impl Bm199Params {
     }
 }
 
+/// BM25-ATIRE variant: simplified IDF = log(N/df)
+pub fn bm25_atire(tf: f64, df: u64, dl: u64, avgdl: f64, n: u64, k1: f64, b: f64) -> f64 {
+    let idf = (n as f64 / df as f64).ln();
+    let tf_norm = (tf * (k1 + 1.0)) / (tf + k1 * (1.0 - b + b * (dl as f64 / avgdl)));
+    idf * tf_norm
+}
+
+/// DLH13 — Divergence from Randomness, parameter-free
+/// f_r = tf/dl
+/// score = (1/(tf+0.5)) * [tf * log2(tf * avgdl / (dl * F/N)) + 0.5 * log2(2π * tf * (1-f_r))]
+/// Requires cf (collection frequency of term)
+pub fn dlh13(tf: f64, dl: u64, avgdl: f64, n: u64, cf: u64) -> f64 {
+    if tf <= 0.0 { return 0.0; }
+    let dl = dl as f64;
+    let n_f = n as f64;
+    let cf_f = cf as f64;
+    let f_r = tf / dl;
+    if f_r >= 1.0 { return 0.0; }
+    let lambda = cf_f / n_f;
+    let term1 = tf * ((tf * avgdl / (dl * lambda)).max(1e-10)).log2();
+    let term2 = 0.5 * (2.0 * std::f64::consts::PI * tf * (1.0 - f_r)).max(1e-10).log2();
+    (term1 + term2) / (tf + 0.5)
+}
+
+/// QLD — Query Likelihood with Dirichlet smoothing
+/// score = log((tf + μ * p_c) / (dl + μ))
+/// p_c = cf / total_tokens, μ = 2500 (default)
+pub fn qld(tf: f64, dl: u64, cf: u64, total_tokens: u64, mu: f64) -> f64 {
+    let p_c = cf as f64 / total_tokens as f64;
+    ((tf + mu * p_c) / (dl as f64 + mu)).ln()
+}
+
+/// TF-IDF (sublinear TF, cosine-normalized)
+pub fn tfidf(tf: f64, df: u64, n: u64) -> f64 {
+    if tf <= 0.0 { return 0.0; }
+    let tf_log = 1.0 + tf.ln();
+    let idf = (n as f64 / df as f64).ln();
+    tf_log * idf
+}
+
 /// Standard IDF: log((N - df + 0.5) / (df + 0.5) + 1)
 #[inline]
 pub fn idf_standard(df: u64, n: u64) -> f64 {

@@ -79,10 +79,18 @@ fn main() {
             Some("bm25") => vec![("bm25", Some(Bm25Variant::Standard))],
             Some("bm25+") => vec![("bm25+", Some(Bm25Variant::Plus))],
             Some("bm25l") => vec![("bm25l", Some(Bm25Variant::L))],
+            Some("atire") => vec![("atire", Some(Bm25Variant::Atire))],
+            Some("dlh13") => vec![("dlh13", Some(Bm25Variant::DLH13))],
+            Some("qld") => vec![("qld", Some(Bm25Variant::QLD))],
+            Some("tfidf") => vec![("tfidf", Some(Bm25Variant::TfIdf))],
             _ => vec![
                 ("bm25", Some(Bm25Variant::Standard)),
                 ("bm25+", Some(Bm25Variant::Plus)),
                 ("bm25l", Some(Bm25Variant::L)),
+                ("atire", Some(Bm25Variant::Atire)),
+                ("dlh13", Some(Bm25Variant::DLH13)),
+                ("qld", Some(Bm25Variant::QLD)),
+                ("tfidf", Some(Bm25Variant::TfIdf)),
                 ("bm199", None),
             ],
         };
