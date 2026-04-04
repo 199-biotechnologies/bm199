@@ -85,7 +85,9 @@ impl Bm199Params {
         // BM25-style TF component with adaptive saturation + delta floor (BM25+)
         let tf_component = (tf_sat * (self.k1 + 1.0)) / (tf_sat + self.k1 * len_norm) + self.delta;
 
-        idf * tf_component
+        // IDF boost: rare terms get super-linear importance (Bayesian BM25 insight)
+        let idf_boosted = idf * (1.0 + self.delta * idf_ratio);
+        idf_boosted * tf_component
     }
 
     /// Score a full document against a query
