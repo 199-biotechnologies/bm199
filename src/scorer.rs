@@ -82,8 +82,10 @@ impl Bm199Params {
         let log_ratio = (1.0 + dl_ratio).log(self.log_base)
             / (2.0_f64).log(self.log_base);
         // Quadratic penalty for short docs: if dl < avgdl, add extra penalty
+        // IDF-conditioned b: rare terms get slightly less length penalty
+        let b_eff = self.b * (1.0 - 0.1 * idf_ratio);
         let short_penalty = if dl_ratio < 1.0 { 0.15 * (1.0 - dl_ratio).powi(2) } else { 0.0 };
-        let len_norm = 1.0 - self.b + self.b * log_ratio + short_penalty;
+        let len_norm = 1.0 - b_eff + b_eff * log_ratio + short_penalty;
 
         // BM25-style TF component with adaptive saturation + delta floor (BM25+)
         let tf_component = (tf_sat * (self.k1 + 1.0)) / (tf_sat + self.k1 * len_norm) + self.delta;
