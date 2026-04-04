@@ -32,8 +32,17 @@ fn main() {
         Bm199Params::default()
     };
 
+    let split = args.iter()
+        .position(|a| a == "--split")
+        .and_then(|i| args.get(i + 1))
+        .map(|s| s.as_str());
+
     let data_dir = beir::beir_data_dir();
-    let datasets = beir::dataset_names();
+    let datasets = match split {
+        Some("tuning") => beir::tuning_datasets(),
+        Some("heldout") => beir::heldout_datasets(),
+        _ => beir::dataset_names(),
+    };
 
     let mut all_results: Vec<EvalResult> = Vec::new();
 

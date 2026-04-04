@@ -110,14 +110,49 @@ impl BeirDataset {
     }
 }
 
-/// Simple whitespace + lowercase tokenizer (good enough for BM25 benchmarking)
+/// Lucene EnglishAnalyzer-equivalent tokenizer:
+/// lowercase -> split on non-alphanumeric -> strip possessives -> stopword removal -> Porter stemming
 pub fn tokenize(text: &str) -> Vec<String> {
+    use rust_stemmers::{Algorithm, Stemmer};
+    let stemmer = Stemmer::create(Algorithm::English);
+
+    text.to_lowercase()
+        .split(|c: char| !c.is_alphanumeric())
+        .filter(|s| s.len() > 1 && s.len() < 50)
+        // Strip English possessives ('s)
+        .map(|s| if s.ends_with("s") { s.strip_suffix("s").unwrap_or(s) } else { s })
+        .filter(|s| s.len() > 1)
+        // Stopword removal (Lucene English stopword list)
+        .filter(|s| !ENGLISH_STOPWORDS.contains(s))
+        // Porter stemming
+        .map(|s| stemmer.stem(s).into_owned())
+        .filter(|s| s.len() > 1)
+        .collect()
+}
+
+/// Raw tokenizer (no stemming, no stopwords) for ablation studies
+pub fn tokenize_raw(text: &str) -> Vec<String> {
     text.to_lowercase()
         .split(|c: char| !c.is_alphanumeric())
         .filter(|s| s.len() > 1 && s.len() < 50)
         .map(|s| s.to_string())
         .collect()
 }
+
+/// Lucene English stopword list
+const ENGLISH_STOPWORDS: &[&str] = &[
+    "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in",
+    "into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the",
+    "their", "then", "there", "these", "they", "this", "to", "was", "will", "with",
+    "do", "does", "did", "has", "have", "had", "he", "she", "we", "you", "his",
+    "her", "its", "our", "your", "my", "me", "him", "us", "them", "what", "which",
+    "who", "whom", "when", "where", "why", "how", "all", "each", "every", "both",
+    "few", "more", "most", "other", "some", "am", "been", "being", "were", "would",
+    "could", "should", "can", "may", "might", "shall", "about", "above", "after",
+    "again", "between", "from", "further", "here", "just", "only", "own", "same",
+    "so", "than", "too", "very", "also", "because", "before", "below", "down",
+    "during", "out", "over", "through", "under", "until", "up", "while",
+];
 
 /// Get BEIR data directory, downloading if needed
 pub fn beir_data_dir() -> PathBuf {
@@ -126,7 +161,22 @@ pub fn beir_data_dir() -> PathBuf {
     dir
 }
 
-/// Available BEIR datasets (small ones for fast iteration)
+/// Tuning datasets (used for param optimization)
+pub fn tuning_datasets() -> Vec<&'static str> {
+    vec!["nfcorpus", "scifact", "fiqa", "arguana"]
+}
+
+/// Held-out datasets (evaluate ONCE with frozen params)
+pub fn heldout_datasets() -> Vec<&'static str> {
+    vec![
+        "trec-covid", "climate-fever", "fever", "hotpotqa",
+        "nq", "quora", "scidocs", "dbpedia-entity", "webis-touche2020",
+    ]
+}
+
+/// All datasets
 pub fn dataset_names() -> Vec<&'static str> {
-    vec!["nfcorpus", "scifact", "fiqa"]
+    let mut all = tuning_datasets();
+    all.extend(heldout_datasets());
+    all
 }

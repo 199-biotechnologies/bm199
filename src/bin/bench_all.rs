@@ -1,7 +1,7 @@
 /// bm199-bench-all: Benchmark binary focused on BM199 only.
 /// Outputs the avg nDCG@10 as a single number for autoresearch record.
 /// Usage: cargo run --release --bin bm199-bench-all
-/// Reads bm199_params.json from cwd.
+/// Only evaluates on TUNING datasets (not held-out) to prevent overfitting.
 
 use bm199::beir::{self, BeirDataset, tokenize};
 use bm199::eval;
@@ -18,7 +18,8 @@ fn main() {
     };
 
     let data_dir = beir::beir_data_dir();
-    let datasets = beir::dataset_names();
+    // ONLY tuning datasets — held-out is never touched during optimization
+    let datasets = beir::tuning_datasets();
     let mut total_ndcg = 0.0;
     let mut ds_count = 0;
 
