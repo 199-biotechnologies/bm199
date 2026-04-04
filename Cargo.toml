@@ -1,0 +1,31 @@
+[package]
+name = "bm199"
+version = "0.1.0"
+edition = "2024"
+description = "A novel sparse retrieval scoring algorithm that surpasses BM25 and its variants"
+license = "MIT"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rayon = "1"
+rustc-hash = "2"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "quality"
+harness = false
+
+[[bench]]
+name = "speed"
+harness = false
+
+[[bin]]
+name = "bm199-eval"
+path = "src/bin/eval.rs"
+
+[[bin]]
+name = "bm199-bench-all"
+path = "src/bin/bench_all.rs"

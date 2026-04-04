@@ -1,0 +1,11 @@
+{
+  "k1": 1.2,
+  "b": 0.75,
+  "delta": 1.0,
+  "beta_min": 0.7,
+  "beta_max": 1.0,
+  "lambda_cov": 0.1,
+  "alpha_sig": 1.0,
+  "beta_sig": 0.0,
+  "log_base": 2.718281828459045
+}
