@@ -76,14 +76,16 @@ impl Bm199Params {
         let beta = self.beta_max - idf_ratio * (self.beta_max - self.beta_min);
         let tf_sat = tf.powf(beta);
 
-        // Logarithmic length normalization with quadratic short-doc penalty (RankEvolve)
-        // log-norm for long docs (compresses), quadratic penalty for too-short docs
+        // Term-adaptive length normalization (BM199 core innovation)
+        // Rare terms (high IDF) use LESS length normalization — a long doc
+        // matching a rare term shouldn't be penalized as much as one matching a common term.
         let dl_ratio = dl as f64 / avgdl;
         let log_ratio = (1.0 + dl_ratio).log(self.log_base)
             / (2.0_f64).log(self.log_base);
-        // Quadratic penalty for short docs: if dl < avgdl, add extra penalty
+        // IDF-conditioned b: rare terms get lower effective b
+        let b_effective = self.b * (1.0 - 0.3 * idf_ratio); // rare terms: b*0.7, common: b*1.0
         let short_penalty = if dl_ratio < 1.0 { 0.15 * (1.0 - dl_ratio).powi(2) } else { 0.0 };
-        let len_norm = 1.0 - self.b + self.b * log_ratio + short_penalty;
+        let len_norm = 1.0 - b_effective + b_effective * log_ratio + short_penalty;
 
         // BM25-style TF component with adaptive saturation + delta floor (BM25+)
         let tf_component = (tf_sat * (self.k1 + 1.0)) / (tf_sat + self.k1 * len_norm) + self.delta;
