@@ -166,11 +166,17 @@ pub fn tuning_datasets() -> Vec<&'static str> {
     vec!["nfcorpus", "scifact", "fiqa", "arguana"]
 }
 
-/// Held-out datasets (evaluate ONCE with frozen params)
+/// Held-out datasets — small/medium (under 600K docs, fast to index)
 pub fn heldout_datasets() -> Vec<&'static str> {
     vec![
-        "trec-covid", "climate-fever", "fever", "hotpotqa",
-        "nq", "quora", "scidocs", "dbpedia-entity", "webis-touche2020",
+        "trec-covid", "quora", "scidocs", "webis-touche2020",
+    ]
+}
+
+/// Held-out datasets — large (millions of docs, needs mmap or streaming index)
+pub fn heldout_large_datasets() -> Vec<&'static str> {
+    vec![
+        "climate-fever", "fever", "hotpotqa", "nq", "dbpedia-entity",
     ]
 }
 
