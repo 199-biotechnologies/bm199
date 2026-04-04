@@ -77,7 +77,10 @@ impl Bm199Params {
         let tf_sat = tf.powf(beta);
 
         // Logarithmic length normalization (RankEvolve insight)
-        let len_norm = (1.0 + dl as f64 / avgdl).log(self.log_base) * self.b + (1.0 - self.b);
+        // Normalized so len_norm=1.0 when dl=avgdl (anchor point)
+        let log_ratio = (1.0 + dl as f64 / avgdl).log(self.log_base)
+            / (2.0_f64).log(self.log_base); // divide by log_b(2) so ratio=1 at dl=avgdl
+        let len_norm = 1.0 - self.b + self.b * log_ratio;
 
         // BM25-style TF component with adaptive saturation + delta floor (BM25+)
         let tf_component = (tf_sat * (self.k1 + 1.0)) / (tf_sat + self.k1 * len_norm) + self.delta;
