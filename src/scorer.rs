@@ -71,10 +71,14 @@ impl Bm199Params {
         let idf = idf_standard(df, n);
         let max_idf = (n as f64).ln(); // approximate max IDF for normalization
 
-        // Adaptive saturation: rare terms (high IDF) saturate faster (lower exponent)
+        // Adaptive saturation: blend log-saturation with power-saturation by IDF
+        // Rare terms (high IDF) use more log (faster saturation), common terms use more power
         let idf_ratio = (idf / max_idf).clamp(0.0, 1.0);
         let beta = self.beta_max - idf_ratio * (self.beta_max - self.beta_min);
-        let tf_sat = tf.powf(beta);
+        let tf_pow = tf.powf(beta);
+        let tf_log = (1.0 + tf).ln();
+        // Blend: rare terms lean toward log, common terms lean toward power
+        let tf_sat = tf_log * idf_ratio + tf_pow * (1.0 - idf_ratio);
 
         // Logarithmic length normalization (RankEvolve insight)
         // Normalized so len_norm=1.0 when dl=avgdl (anchor point)
