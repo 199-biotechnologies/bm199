@@ -78,7 +78,7 @@ impl Bm199Params {
 
         // Length normalization: BM25-style linear + quadratic short-doc penalty
         let dl_ratio = dl as f64 / avgdl;
-        let short_penalty = if dl_ratio < 1.0 { 0.05 * (1.0 - dl_ratio).powi(2) } else { 0.0 };
+        let short_penalty = if dl_ratio < 1.0 { 0.15 * (1.0 - dl_ratio).powi(2) } else { 0.0 };
         let len_norm = 1.0 - self.b + self.b * dl_ratio + short_penalty;
 
         let tf_component = (tf_sat * (self.k1 + 1.0)) / (tf_sat + self.k1 * len_norm) + self.delta;
