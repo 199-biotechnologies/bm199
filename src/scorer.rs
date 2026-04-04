@@ -69,23 +69,18 @@ impl Bm199Params {
     /// Per-term score for BM199
     pub fn score_term(&self, tf: f64, df: u64, dl: u64, avgdl: f64, n: u64) -> f64 {
         let idf = idf_standard(df, n);
-        let max_idf = (n as f64).ln(); // approximate max IDF for normalization
+        let max_idf = (n as f64).ln();
 
         // Adaptive saturation: rare terms (high IDF) saturate faster (lower exponent)
         let idf_ratio = (idf / max_idf).clamp(0.0, 1.0);
         let beta = self.beta_max - idf_ratio * (self.beta_max - self.beta_min);
         let tf_sat = tf.powf(beta);
 
-        // Logarithmic length normalization with quadratic short-doc penalty (RankEvolve)
-        // log-norm for long docs (compresses), quadratic penalty for too-short docs
+        // Length normalization: BM25-style linear + quadratic short-doc penalty
         let dl_ratio = dl as f64 / avgdl;
-        let log_ratio = (1.0 + dl_ratio).log(self.log_base)
-            / (2.0_f64).log(self.log_base);
-        // Quadratic penalty for short docs: if dl < avgdl, add extra penalty
         let short_penalty = if dl_ratio < 1.0 { 0.15 * (1.0 - dl_ratio).powi(2) } else { 0.0 };
-        let len_norm = 1.0 - self.b + self.b * log_ratio + short_penalty;
+        let len_norm = 1.0 - self.b + self.b * dl_ratio + short_penalty;
 
-        // BM25-style TF component with adaptive saturation + delta floor (BM25+)
         let tf_component = (tf_sat * (self.k1 + 1.0)) / (tf_sat + self.k1 * len_norm) + self.delta;
 
         idf * tf_component
