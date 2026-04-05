@@ -162,3 +162,45 @@ Finished: Sun  5 Apr 2026 11:52:05 BST
   Loaded 123142 queries
   Loaded 6666 qrels entries
   Index built in 133.983305125s (5416568 docs, avgdl=53.6)
+  bm25_k1.5 | nDCG@10=0.4815 MAP=0.4289 R@100=0.8514 MRR=0.4497 | 48 QPS (2550.028336792s)
+=== Evaluating hotpotqa ===
+  Loaded 5233329 documents
+  Loaded 97852 queries
+  Loaded 7405 qrels entries
+  Index built in 69.88853825s (5233329 docs, avgdl=30.1)
+  bm25_k1.5 | nDCG@10=0.5728 MAP=0.4901 R@100=0.7623 MRR=0.7410 | 30 QPS (3249.073001333s)
+
+=== AVERAGES ===
+  bm25_k1.5 | avg nDCG@10=0.5272 avg MAP=0.4595 avg R@100=0.8068 avg MRR=0.5954
+{
+  "averages": [
+    {
+      "avg_ndcg_at_10": 0.5272,
+      "variant": "bm25_k1.5"
+    }
+  ],
+  "datasets": [
+    "fever",
+    "hotpotqa"
+  ],
+  "per_dataset": [
+    {
+      "dataset": "fever",
+      "map": 0.4289254015519143,
+      "mrr": 0.4496867722390348,
+      "ndcg_at_10": 0.48149530136336344,
+      "num_queries": 6666,
+      "recall_at_100": 0.851422761323751,
+      "variant": "bm25_k1.5"
+    },
+    {
+      "dataset": "hotpotqa",
+      "map": 0.4901294092432278,
+      "mrr": 0.7410167103785583,
+      "ndcg_at_10": 0.5728182977143237,
+      "num_queries": 7405,
+      "recall_at_100": 0.762255232950709,
+      "variant": "bm25_k1.5"
+    }
+  ]
+}
