@@ -9,3 +9,98 @@ Started: Sun  5 Apr 2026 08:40:06 BST
   Loaded 123142 queries
   Loaded 6666 qrels entries
   Index built in 155.218127042s (5416568 docs, avgdl=53.6)
+  bm25 | nDCG@10=0.5030 MAP=0.4508 R@100=0.8597 MRR=0.4726 | 64 QPS (1918.379674625s)
+=== Evaluating hotpotqa ===
+  Loaded 5233329 documents
+  Loaded 97852 queries
+  Loaded 7405 qrels entries
+  Index built in 72.138653917s (5233329 docs, avgdl=30.1)
+  bm25 | nDCG@10=0.5893 MAP=0.5059 R@100=0.7727 MRR=0.7590 | 43 QPS (2279.6623365s)
+
+=== AVERAGES ===
+  bm25 | avg nDCG@10=0.5462 avg MAP=0.4783 avg R@100=0.8162 avg MRR=0.6158
+{
+  "averages": [
+    {
+      "avg_ndcg_at_10": 0.5462,
+      "variant": "bm25"
+    }
+  ],
+  "datasets": [
+    "hotpotqa",
+    "fever"
+  ],
+  "per_dataset": [
+    {
+      "dataset": "fever",
+      "map": 0.4508255845239986,
+      "mrr": 0.47255154776711616,
+      "ndcg_at_10": 0.5030086504705704,
+      "num_queries": 6666,
+      "recall_at_100": 0.8597175193709846,
+      "variant": "bm25"
+    },
+    {
+      "dataset": "hotpotqa",
+      "map": 0.5058583336982345,
+      "mrr": 0.7590476174862162,
+      "ndcg_at_10": 0.5892965757907301,
+      "num_queries": 7405,
+      "recall_at_100": 0.7727211343686698,
+      "variant": "bm25"
+    }
+  ]
+}
+
+--- Sqrt(k1=1.5) on test set ---
+    Finished `release` profile [optimized] target(s) in 0.07s
+     Running `target/release/bm199-eval --split test --scorer generic --norm sqrt --k1 1.5 --label sqrt_k1.5`
+=== Evaluating fever ===
+  Loaded 5416568 documents
+  Loaded 123142 queries
+  Loaded 6666 qrels entries
+  Index built in 144.894876041s (5416568 docs, avgdl=53.6)
+  sqrt_k1.5 | nDCG@10=0.6195 MAP=0.5627 R@100=0.9098 MRR=0.5906 | 41 QPS (3012.2395725s)
+=== Evaluating hotpotqa ===
+  Loaded 5233329 documents
+  Loaded 97852 queries
+  Loaded 7405 qrels entries
+  Index built in 67.43229375s (5233329 docs, avgdl=30.1)
+  sqrt_k1.5 | nDCG@10=0.6154 MAP=0.5321 R@100=0.7894 MRR=0.7855 | 25 QPS (3843.204026584s)
+
+=== AVERAGES ===
+  sqrt_k1.5 | avg nDCG@10=0.6174 avg MAP=0.5474 avg R@100=0.8496 avg MRR=0.6880
+{
+  "averages": [
+    {
+      "avg_ndcg_at_10": 0.6174,
+      "variant": "sqrt_k1.5"
+    }
+  ],
+  "datasets": [
+    "fever",
+    "hotpotqa"
+  ],
+  "per_dataset": [
+    {
+      "dataset": "fever",
+      "map": 0.5627349000397148,
+      "mrr": 0.5905837571637311,
+      "ndcg_at_10": 0.6194615367909753,
+      "num_queries": 6666,
+      "recall_at_100": 0.9098250896518227,
+      "variant": "sqrt_k1.5"
+    },
+    {
+      "dataset": "hotpotqa",
+      "map": 0.5320827268621806,
+      "mrr": 0.7854549791727473,
+      "ndcg_at_10": 0.6153953290726232,
+      "num_queries": 7405,
+      "recall_at_100": 0.7893990546927752,
+      "variant": "sqrt_k1.5"
+    }
+  ]
+}
+
+Finished: Sun  5 Apr 2026 11:52:05 BST
