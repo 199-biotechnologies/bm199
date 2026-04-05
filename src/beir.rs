@@ -116,12 +116,12 @@ pub fn tokenize(text: &str) -> Vec<String> {
     use rust_stemmers::{Algorithm, Stemmer};
     let stemmer = Stemmer::create(Algorithm::English);
 
-    text.to_lowercase()
+    // Strip possessives before splitting (handles both straight and curly apostrophes)
+    let lowered = text.to_lowercase();
+    let cleaned = lowered.replace("'s ", " ").replace("\u{2019}s ", " ");
+    cleaned
         .split(|c: char| !c.is_alphanumeric())
         .filter(|s| s.len() > 1 && s.len() < 50)
-        // Strip English possessives ('s)
-        .map(|s| if s.ends_with("s") { s.strip_suffix("s").unwrap_or(s) } else { s })
-        .filter(|s| s.len() > 1)
         // Stopword removal (Lucene English stopword list)
         .filter(|s| !ENGLISH_STOPWORDS.contains(s))
         // Porter stemming
@@ -166,17 +166,28 @@ pub fn tuning_datasets() -> Vec<&'static str> {
     vec!["nfcorpus", "scifact", "fiqa", "arguana"]
 }
 
-/// Held-out datasets (ALL — evaluate ONCE with frozen params)
-pub fn heldout_datasets() -> Vec<&'static str> {
+/// Validation datasets (used to select formula structure — NOT unbiased)
+/// These were used to choose sqrt over linear normalization, so they are burned.
+pub fn validation_datasets() -> Vec<&'static str> {
     vec![
         "trec-covid", "quora", "scidocs", "webis-touche2020",
-        "nq", "dbpedia-entity", "climate-fever", "fever", "hotpotqa",
+        "nq", "dbpedia-entity", "climate-fever",
     ]
+}
+
+/// Backward compat alias
+pub fn heldout_datasets() -> Vec<&'static str> { validation_datasets() }
+
+/// True test set — NEVER evaluate until formula and k1 are frozen.
+/// Results from these are the publishable generalization numbers.
+pub fn test_datasets() -> Vec<&'static str> {
+    vec!["fever", "hotpotqa"]
 }
 
 /// All datasets
 pub fn dataset_names() -> Vec<&'static str> {
     let mut all = tuning_datasets();
-    all.extend(heldout_datasets());
+    all.extend(validation_datasets());
+    all.extend(test_datasets());
     all
 }

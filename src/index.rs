@@ -128,6 +128,9 @@ impl InvertedIndex {
                     Bm25Variant::TfIdf => {
                         crate::scorer::tfidf(tf, df, self.n)
                     }
+                    Bm25Variant::Bm199 => {
+                        crate::scorer::bm199(tf, df, dl, self.avgdl, self.n, k1)
+                    }
                 };
 
                 *scores.entry(posting.doc_idx).or_insert(0.0) += term_score;
@@ -184,6 +187,33 @@ impl InvertedIndex {
     }
 }
 
+impl InvertedIndex {
+    /// Generic search using ScoringConfig — for hypothesis testing
+    pub fn search_generic(
+        &self,
+        query_tokens: &[String],
+        config: &crate::scorer::ScoringConfig,
+    ) -> Vec<(usize, f64)> {
+        let mut scores: FxHashMap<usize, f64> = FxHashMap::default();
+
+        for term in query_tokens {
+            let df = match self.df.get(term) { Some(&d) => d, None => continue };
+            let postings = match self.postings.get(term) { Some(p) => p, None => continue };
+
+            for posting in postings {
+                let tf = posting.tf as f64;
+                let dl = self.doc_lengths[posting.doc_idx];
+                let term_score = crate::scorer::score_generic(config, tf, df, dl, self.avgdl, self.n);
+                *scores.entry(posting.doc_idx).or_insert(0.0) += term_score;
+            }
+        }
+
+        let mut results: Vec<(usize, f64)> = scores.into_iter().collect();
+        results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+        results
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 pub enum Bm25Variant {
     Standard,
@@ -193,4 +223,6 @@ pub enum Bm25Variant {
     DLH13,
     QLD,
     TfIdf,
+    /// Clean BM199: sqrt length normalization, no b parameter
+    Bm199,
 }

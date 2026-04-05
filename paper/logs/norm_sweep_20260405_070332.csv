@@ -1,0 +1,165 @@
+hypothesis,k1,norm,alpha,extra,ndcg10
+bm25_default,1.2,linear,b=0.75,,0.409137
+bm25_tuned,1.2,linear,b=0.90,,0.411557
+bm25_tuned,1.2,linear,b=1.00,,0.412103
+power,1.8,power,a=0.20,,0.373104
+power,1.8,power,a=0.25,,0.375601
+power,1.8,power,a=0.30,,0.380832
+power,1.8,power,a=0.35,,0.385455
+power,1.8,power,a=0.40,,0.389678
+power,1.8,power,a=0.45,,0.393455
+power,1.8,power,a=0.50,,0.397951
+power,1.8,power,a=0.55,,0.400934
+power,1.8,power,a=0.60,,0.403411
+power,1.8,power,a=0.65,,0.407241
+power,1.8,power,a=0.70,,0.409130
+power,1.8,power,a=0.75,,0.410486
+power,1.8,power,a=0.80,,0.411185
+power,1.8,power,a=0.90,,0.411098
+power,1.8,power,a=1.00,,0.408452
+power_k1,1.0,power,a=0.30,,0.382456
+power_k1,1.2,power,a=0.30,,0.382471
+power_k1,1.4,power,a=0.30,,0.381762
+power_k1,1.6,power,a=0.30,,0.381346
+power_k1,1.8,power,a=0.30,,0.380832
+power_k1,2.0,power,a=0.30,,0.379781
+power_k1,1.0,power,a=0.40,,0.389194
+power_k1,1.2,power,a=0.40,,0.389292
+power_k1,1.4,power,a=0.40,,0.390480
+power_k1,1.6,power,a=0.40,,0.390664
+power_k1,1.8,power,a=0.40,,0.389678
+power_k1,2.0,power,a=0.40,,0.389060
+power_k1,1.0,power,a=0.50,,0.395763
+power_k1,1.2,power,a=0.50,,0.396015
+power_k1,1.4,power,a=0.50,,0.398626
+power_k1,1.6,power,a=0.50,,0.399120
+power_k1,1.8,power,a=0.50,,0.397951
+power_k1,2.0,power,a=0.50,,0.397448
+power_k1,1.0,power,a=0.60,,0.402670
+power_k1,1.2,power,a=0.60,,0.402401
+power_k1,1.4,power,a=0.60,,0.403938
+power_k1,1.6,power,a=0.60,,0.404657
+power_k1,1.8,power,a=0.60,,0.403411
+power_k1,2.0,power,a=0.60,,0.403705
+power_k1,1.0,power,a=0.70,,0.405645
+power_k1,1.2,power,a=0.70,,0.407735
+power_k1,1.4,power,a=0.70,,0.410370
+power_k1,1.6,power,a=0.70,,0.410575
+power_k1,1.8,power,a=0.70,,0.409130
+power_k1,2.0,power,a=0.70,,0.407906
+log,1.0,log,,,0.405040
+log,1.2,log,,,0.407087
+log,1.4,log,,,0.409296
+log,1.6,log,,,0.409569
+log,1.8,log,,,0.408221
+log,2.0,log,,,0.407368
+sigmoid,1.0,sigmoid,,,0.390046
+sigmoid,1.2,sigmoid,,,0.391384
+sigmoid,1.4,sigmoid,,,0.392615
+sigmoid,1.6,sigmoid,,,0.393319
+sigmoid,1.8,sigmoid,,,0.392358
+sigmoid,2.0,sigmoid,,,0.392542
+hinged,1.2,hinged,a=0.30,,0.398718
+hinged,1.5,hinged,a=0.30,,0.399873
+hinged,1.8,hinged,a=0.30,,0.400153
+hinged,1.2,hinged,a=0.40,,0.401824
+hinged,1.5,hinged,a=0.40,,0.404140
+hinged,1.8,hinged,a=0.40,,0.404254
+hinged,1.2,hinged,a=0.50,,0.405450
+hinged,1.5,hinged,a=0.50,,0.408097
+hinged,1.8,hinged,a=0.50,,0.408322
+hinged,1.2,hinged,a=0.60,,0.408424
+hinged,1.5,hinged,a=0.60,,0.410547
+hinged,1.8,hinged,a=0.60,,0.410994
+hinged,1.2,hinged,a=0.70,,0.410730
+hinged,1.5,hinged,a=0.70,,0.412644
+hinged,1.8,hinged,a=0.70,,0.410767
+hinged,1.2,hinged,a=0.80,,0.412269
+hinged,1.5,hinged,a=0.80,,0.411768
+hinged,1.8,hinged,a=0.80,,0.411577
+asymmetric,1.8,asymmetric,a1=0.70,a2=0.30,0.393236
+asymmetric,1.8,asymmetric,a1=0.70,a2=0.40,0.399064
+asymmetric,1.8,asymmetric,a1=0.70,a2=0.50,0.402635
+asymmetric,1.8,asymmetric,a1=0.70,a2=0.60,0.406681
+asymmetric,1.8,asymmetric,a1=0.80,a2=0.30,0.396120
+asymmetric,1.8,asymmetric,a1=0.80,a2=0.40,0.401733
+asymmetric,1.8,asymmetric,a1=0.80,a2=0.50,0.405299
+asymmetric,1.8,asymmetric,a1=0.80,a2=0.60,0.408934
+asymmetric,1.8,asymmetric,a1=0.90,a2=0.30,0.398782
+asymmetric,1.8,asymmetric,a1=0.90,a2=0.40,0.403660
+asymmetric,1.8,asymmetric,a1=0.90,a2=0.50,0.407410
+asymmetric,1.8,asymmetric,a1=0.90,a2=0.60,0.410219
+asymmetric,1.8,asymmetric,a1=1.00,a2=0.30,0.400153
+asymmetric,1.8,asymmetric,a1=1.00,a2=0.40,0.404254
+asymmetric,1.8,asymmetric,a1=1.00,a2=0.50,0.408322
+asymmetric,1.8,asymmetric,a1=1.00,a2=0.60,0.410994
+saturation,1.2,saturation,c=0.5,,0.379926
+saturation,1.5,saturation,c=0.5,,0.380604
+saturation,1.8,saturation,c=0.5,,0.379590
+saturation,1.2,saturation,c=1.0,,0.391384
+saturation,1.5,saturation,c=1.0,,0.392439
+saturation,1.8,saturation,c=1.0,,0.392358
+saturation,1.2,saturation,c=2.0,,0.401982
+saturation,1.5,saturation,c=2.0,,0.404393
+saturation,1.8,saturation,c=2.0,,0.404036
+saturation,1.2,saturation,c=3.0,,0.407311
+saturation,1.5,saturation,c=3.0,,0.409078
+saturation,1.8,saturation,c=3.0,,0.408074
+saturation,1.2,saturation,c=5.0,,0.410108
+saturation,1.5,saturation,c=5.0,,0.412247
+saturation,1.8,saturation,c=5.0,,0.410852
+softplus,1.0,softplus,,,0.400335
+softplus,1.2,softplus,,,0.403214
+softplus,1.4,softplus,,,0.405081
+softplus,1.6,softplus,,,0.404732
+softplus,1.8,softplus,,,0.404987
+softplus,2.0,softplus,,,0.405967
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.25 a=0.40,0.381707
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.25 a=0.50,0.382923
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.25 a=0.60,0.384289
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.50 a=0.40,0.395016
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.50 a=0.50,0.396133
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.50 a=0.60,0.396398
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.75 a=0.40,0.403971
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.75 a=0.50,0.403630
+dualpivot,1.8,dualpivot,ss=0.50,sl=0.75 a=0.60,0.403534
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.25 a=0.40,0.391254
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.25 a=0.50,0.392056
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.25 a=0.60,0.393043
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.50 a=0.40,0.402686
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.50 a=0.50,0.403835
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.50 a=0.60,0.404564
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.75 a=0.40,0.409953
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.75 a=0.50,0.410695
+dualpivot,1.8,dualpivot,ss=0.75,sl=0.75 a=0.60,0.410522
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.25 a=0.40,0.399067
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.25 a=0.50,0.399918
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.25 a=0.60,0.400666
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.50 a=0.40,0.406736
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.50 a=0.50,0.408182
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.50 a=0.60,0.409736
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.75 a=0.40,0.410354
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.75 a=0.50,0.411224
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.75 a=0.60,0.411855
+log_tf,1.2,power,a=0.5,tf=log,0.407287
+dlog_tf,1.2,power,a=0.5,tf=dlog,0.406702
+capped_tf,1.2,power,a=0.5,tf=cap5,0.401087
+capped_tf,1.2,power,a=0.5,tf=cap3,0.399806
+log_tf,1.5,power,a=0.5,tf=log,0.409531
+dlog_tf,1.5,power,a=0.5,tf=dlog,0.406918
+capped_tf,1.5,power,a=0.5,tf=cap5,0.403442
+capped_tf,1.5,power,a=0.5,tf=cap3,0.401011
+log_tf,1.8,power,a=0.5,tf=log,0.410261
+dlog_tf,1.8,power,a=0.5,tf=dlog,0.406341
+capped_tf,1.8,power,a=0.5,tf=cap5,0.403874
+capped_tf,1.8,power,a=0.5,tf=cap3,0.402857
+squared_idf,1.5,power,a=0.5,idf=sq,0.387024
+smoothed_idf,1.5,power,a=0.5,idf=sm,0.399019
+atire_idf,1.5,power,a=0.5,idf=atire,0.399017
+squared_idf,1.8,power,a=0.5,idf=sq,0.386148
+smoothed_idf,1.8,power,a=0.5,idf=sm,0.397786
+atire_idf,1.8,power,a=0.5,idf=atire,0.398004
+delta_sqrt,1.8,power,a=0.5,d=0.5,0.392938
+delta_linear,1.2,linear,b=0.75,d=0.5,0.402441
+delta_sqrt,1.8,power,a=0.5,d=1.0,0.391550
+delta_linear,1.2,linear,b=0.75,d=1.0,0.397101

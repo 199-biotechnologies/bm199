@@ -1,0 +1,10 @@
+=== TRUE TEST SET: Sqrt(k1=1.5) vs BM25 default ===
+Started: Sun  5 Apr 2026 08:40:06 BST
+
+--- BM25 default on test set ---
+    Finished `release` profile [optimized] target(s) in 0.10s
+     Running `target/release/bm199-eval --split test --variant bm25`
+=== Evaluating fever ===
+  Loaded 5416568 documents
+  Loaded 123142 queries
+  Loaded 6666 qrels entries

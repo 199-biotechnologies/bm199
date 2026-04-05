@@ -8,6 +8,15 @@ pub fn bm25(tf: f64, df: u64, dl: u64, avgdl: f64, n: u64, k1: f64, b: f64) -> f
     idf * tf_norm
 }
 
+/// BM199 — BM25 with sqrt length normalization (parameter-free length norm)
+/// The ONLY difference from BM25: replaces `(1-b+b*dl/avgdl)` with `sqrt(dl/avgdl)`.
+/// Eliminates the `b` hyperparameter entirely. Recommended k1=1.8.
+pub fn bm199(tf: f64, df: u64, dl: u64, avgdl: f64, n: u64, k1: f64) -> f64 {
+    let idf = idf_standard(df, n);
+    let tf_norm = (tf * (k1 + 1.0)) / (tf + k1 * (dl as f64 / avgdl).sqrt());
+    idf * tf_norm
+}
+
 /// BM25+ — adds delta floor to fix lower-bounding violation
 pub fn bm25_plus(tf: f64, df: u64, dl: u64, avgdl: f64, n: u64, k1: f64, b: f64, delta: f64) -> f64 {
     let idf = idf_standard(df, n);
@@ -24,18 +33,9 @@ pub fn bm25l(tf: f64, df: u64, dl: u64, avgdl: f64, n: u64, k1: f64, b: f64, del
     idf * tf_norm
 }
 
-/// BM199 — novel scoring algorithm
-/// Blends: logarithmic length normalization (RankEvolve), adaptive TF saturation,
-/// BM25+ delta floor, and Bayesian sigmoid calibration.
-///
-/// Parameters (tunable by autoresearch):
-///   k1: TF saturation base (default 1.2)
-///   b: length normalization strength (default 0.75)
-///   delta: BM25+ lower-bounding floor (default 1.0)
-///   beta_min/beta_max: adaptive saturation exponent range by IDF (default 0.7-1.0)
-///   lambda_cov: coverage bonus weight (default 0.1)
-///   alpha_sig/beta_sig: sigmoid calibration (default 1.0, 0.0)
-///   log_base: base for logarithmic length normalization (default std::f64::consts::E)
+/// BM199 experimental params — used for autoresearch ablation studies.
+/// For the clean BM199 formula, use the standalone `bm199()` function instead.
+/// Only `k1` matters in the final formula; other params are vestigial from ablations.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Bm199Params {
     pub k1: f64,
@@ -52,15 +52,15 @@ pub struct Bm199Params {
 impl Default for Bm199Params {
     fn default() -> Self {
         Self {
-            k1: 1.2,
-            b: 0.75,
-            delta: 1.0,
-            beta_min: 0.7,
+            k1: 1.8,
+            b: 0.9,        // vestigial — unused with sqrt norm
+            delta: 0.0,     // disabled
+            beta_min: 0.8,
             beta_max: 1.0,
-            lambda_cov: 0.1,
+            lambda_cov: 0.0, // disabled
             alpha_sig: 1.0,
             beta_sig: 0.0,
-            log_base: std::f64::consts::E,
+            log_base: 2.0,  // vestigial — unused with sqrt norm
         }
     }
 }
@@ -172,6 +172,157 @@ pub fn idf_standard(df: u64, n: u64) -> f64 {
     ((n - df + 0.5) / (df + 0.5) + 1.0).ln()
 }
 
+// ============================================================================
+// GENERIC SCORING FRAMEWORK — for systematic hypothesis testing
+// ============================================================================
+
+/// Length normalization type. All satisfy f(1.0) = 1.0 (pivot at average doc length).
+#[derive(Debug, Clone, Copy)]
+pub enum NormType {
+    /// BM25 standard: 1 - b + b*r
+    Linear(f64),
+    /// Power family: r^alpha. alpha=0.5 is sqrt, alpha=1.0 is b=1.0
+    Power(f64),
+    /// Logarithmic: ln(1+r)/ln(2). Slowest growth.
+    Log,
+    /// Bounded sigmoid: 2r/(1+r). Caps at 2.0 for infinitely long docs.
+    Sigmoid,
+    /// Hinged: r for short docs, r^alpha for long docs. One param.
+    Hinged(f64),
+    /// Asymmetric: r^a1 for short, r^a2 for long. Two params.
+    Asymmetric(f64, f64),
+    /// Saturation: r/(r+c)*(1+c). Bounded. c controls saturation speed.
+    Saturation(f64),
+    /// Softplus: smooth approximation. Normalized so f(1)=1.
+    Softplus,
+    /// Dual-pivot: three-regime normalization with explicit short/long slopes
+    DualPivot { s_short: f64, s_long: f64, alpha_long: f64 },
+    /// IDF-conditioned: rare terms get LESS length normalization (higher alpha)
+    /// because a rare term in a long doc is informative, not noise.
+    /// alpha_eff = base_alpha + gamma * idf_ratio
+    IdfConditioned { base_alpha: f64, gamma: f64 },
+    /// Hinged + IDF: combine hinged (linear short, power long) with IDF conditioning
+    HingedIdf { base_alpha: f64, gamma: f64 },
+}
+
+/// TF transformation mode
+#[derive(Debug, Clone, Copy)]
+pub enum TfMode {
+    /// Raw tf (BM25 standard)
+    Standard,
+    /// log(1+tf) — logarithmic saturation
+    Log,
+    /// log(1+log(1+tf)) — double-log compression
+    DoubleLog,
+    /// min(tf, cap) — hard ceiling
+    Capped(f64),
+}
+
+/// IDF computation mode
+#[derive(Debug, Clone, Copy)]
+pub enum IdfMode {
+    /// Standard Lucene: ln((N-df+0.5)/(df+0.5)+1)
+    Standard,
+    /// ATIRE: ln(N/df)
+    Atire,
+    /// Squared: IDF² — boosts rare terms more
+    Squared,
+    /// Smoothed: ln((N+1)/(df+1))
+    Smoothed,
+}
+
+/// Generic scoring configuration for hypothesis testing
+#[derive(Debug, Clone, Copy)]
+pub struct ScoringConfig {
+    pub k1: f64,
+    pub norm: NormType,
+    pub tf_mode: TfMode,
+    pub idf_mode: IdfMode,
+    pub delta: f64, // BM25+ floor (0 to disable)
+}
+
+impl ScoringConfig {
+    /// BM25 default configuration
+    pub fn bm25_default() -> Self {
+        Self { k1: 1.2, norm: NormType::Linear(0.75), tf_mode: TfMode::Standard, idf_mode: IdfMode::Standard, delta: 0.0 }
+    }
+
+    /// BM199 (sqrt) configuration
+    pub fn bm199_default() -> Self {
+        Self { k1: 1.8, norm: NormType::Power(0.5), tf_mode: TfMode::Standard, idf_mode: IdfMode::Standard, delta: 0.0 }
+    }
+}
+
+/// Compute length normalization value from ratio r = dl/avgdl
+/// idf_ratio: term's IDF / max IDF, in [0,1]. Only used by IDF-conditioned norms.
+#[inline]
+pub fn compute_norm(norm: NormType, r: f64, idf_ratio: f64) -> f64 {
+    match norm {
+        NormType::Linear(b) => 1.0 - b + b * r,
+        NormType::Power(alpha) => r.powf(alpha),
+        NormType::Log => (1.0 + r).ln() / 2.0_f64.ln(),
+        NormType::Sigmoid => 2.0 * r / (1.0 + r),
+        NormType::Hinged(alpha) => if r <= 1.0 { r } else { r.powf(alpha) },
+        NormType::Asymmetric(a_short, a_long) => if r <= 1.0 { r.powf(a_short) } else { r.powf(a_long) },
+        NormType::Saturation(c) => r / (r + c) * (1.0 + c),
+        NormType::Softplus => {
+            let denom = (1.0 + 1.0_f64.exp()).ln();
+            (1.0 + (r - 1.0).exp()).ln() / denom
+        }
+        NormType::DualPivot { s_short, s_long, alpha_long } => {
+            if r <= 1.0 {
+                1.0 - s_short * (1.0 - r)
+            } else {
+                1.0 + s_long * (r - 1.0).powf(alpha_long)
+            }
+        }
+        NormType::IdfConditioned { base_alpha, gamma } => {
+            // Rare terms (high idf_ratio) → higher alpha → LESS normalization
+            // Common terms (low idf_ratio) → lower alpha → MORE normalization
+            let alpha = (base_alpha + gamma * idf_ratio).clamp(0.1, 1.5);
+            r.powf(alpha)
+        }
+        NormType::HingedIdf { base_alpha, gamma } => {
+            let alpha = (base_alpha + gamma * idf_ratio).clamp(0.1, 1.5);
+            if r <= 1.0 { r } else { r.powf(alpha) }
+        }
+    }
+}
+
+/// Compute IDF using specified mode
+#[inline]
+pub fn compute_idf(mode: IdfMode, df: u64, n: u64) -> f64 {
+    match mode {
+        IdfMode::Standard => idf_standard(df, n),
+        IdfMode::Atire => (n as f64 / df as f64).ln(),
+        IdfMode::Squared => { let base = idf_standard(df, n); base * base },
+        IdfMode::Smoothed => ((n as f64 + 1.0) / (df as f64 + 1.0)).ln(),
+    }
+}
+
+/// Transform TF using specified mode
+#[inline]
+pub fn compute_tf(mode: TfMode, tf: f64) -> f64 {
+    match mode {
+        TfMode::Standard => tf,
+        TfMode::Log => (1.0 + tf).ln(),
+        TfMode::DoubleLog => (1.0 + (1.0 + tf).ln()).ln(),
+        TfMode::Capped(cap) => tf.min(cap),
+    }
+}
+
+/// Generic BM25-family scorer. Composes norm, TF, and IDF modes.
+pub fn score_generic(config: &ScoringConfig, tf: f64, df: u64, dl: u64, avgdl: f64, n: u64) -> f64 {
+    let r = dl as f64 / avgdl;
+    let idf = compute_idf(config.idf_mode, df, n);
+    let max_idf = (n as f64).ln().max(1.0);
+    let idf_ratio = (idf / max_idf).clamp(0.0, 1.0);
+    let len_norm = compute_norm(config.norm, r, idf_ratio);
+    let tf_val = compute_tf(config.tf_mode, tf);
+    let tf_component = (tf_val * (config.k1 + 1.0)) / (tf_val + config.k1 * len_norm) + config.delta;
+    idf * tf_component
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -190,7 +341,32 @@ mod tests {
     }
 
     #[test]
-    fn bm199_basic() {
+    fn bm199_clean_basic() {
+        let score = bm199(3.0, 10, 100, 120.0, 1000, 1.8);
+        assert!(score > 0.0);
+    }
+
+    #[test]
+    fn bm199_clean_vs_bm25_at_avgdl() {
+        // At dl == avgdl: sqrt(1.0) = 1.0 and (1-b+b*1) = 1.0
+        // So the only difference is k1
+        let s25 = bm25(2.0, 10, 100, 100.0, 1000, 1.2, 0.75);
+        let s199 = bm199(2.0, 10, 100, 100.0, 1000, 1.2);
+        assert!((s25 - s199).abs() < 1e-10, "At avgdl with same k1, BM25 and BM199 must agree");
+    }
+
+    #[test]
+    fn bm199_one_param_fewer() {
+        // BM199 has 6 params, BM25 has 7 (extra `b`)
+        // At dl=300, avgdl=100: sqrt(3.0)=1.732 vs (0.25+0.75*3)=2.5
+        // BM199 penalizes long docs LESS than BM25
+        let s25 = bm25(1.0, 10, 300, 100.0, 1000, 1.8, 0.75);
+        let s199 = bm199(1.0, 10, 300, 100.0, 1000, 1.8);
+        assert!(s199 > s25, "BM199 should penalize long docs less than BM25");
+    }
+
+    #[test]
+    fn bm199_exp_basic() {
         let p = Bm199Params::default();
         let score = p.score_term(3.0, 10, 100, 120.0, 1000);
         assert!(score > 0.0);
