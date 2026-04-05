@@ -271,7 +271,7 @@ pub fn compute_norm(norm: NormType, r: f64, idf_ratio: f64) -> f64 {
         NormType::Asymmetric(a_short, a_long) => if r <= 1.0 { r.powf(a_short) } else { r.powf(a_long) },
         NormType::Saturation(c) => r / (r + c) * (1.0 + c),
         NormType::Softplus => {
-            let denom = (1.0 + 1.0_f64.exp()).ln();
+            let denom = 2.0_f64.ln(); // ln(1 + e^0) = ln(2), so f(1) = 1
             (1.0 + (r - 1.0).exp()).ln() / denom
         }
         NormType::DualPivot { s_short, s_long, alpha_long } => {
@@ -282,13 +282,14 @@ pub fn compute_norm(norm: NormType, r: f64, idf_ratio: f64) -> f64 {
             }
         }
         NormType::IdfConditioned { base_alpha, gamma } => {
-            // Rare terms (high idf_ratio) → higher alpha → LESS normalization
-            // Common terms (low idf_ratio) → lower alpha → MORE normalization
-            let alpha = (base_alpha + gamma * idf_ratio).clamp(0.1, 1.5);
+            // Rare terms (high idf_ratio) → LOWER alpha → LESS length normalization
+            // because a rare term in a long doc is informative, not noise.
+            // Common terms (low idf_ratio) → higher alpha → MORE normalization.
+            let alpha = (base_alpha - gamma * idf_ratio).clamp(0.1, 1.5);
             r.powf(alpha)
         }
         NormType::HingedIdf { base_alpha, gamma } => {
-            let alpha = (base_alpha + gamma * idf_ratio).clamp(0.1, 1.5);
+            let alpha = (base_alpha - gamma * idf_ratio).clamp(0.1, 1.5);
             if r <= 1.0 { r } else { r.powf(alpha) }
         }
         NormType::RankEvolveLog { c } => {
@@ -342,9 +343,78 @@ pub fn score_generic(config: &ScoringConfig, tf: f64, df: u64, dl: u64, avgdl: f
     idf * tf_component
 }
 
+/// Validate that a normalization function satisfies f(1) = 1 (pivot at avgdl).
+/// Call this in tests and at startup to catch norm implementation bugs.
+pub fn validate_pivot(norm: NormType, tolerance: f64) -> Result<(), String> {
+    let val = compute_norm(norm, 1.0, 0.5); // idf_ratio=0.5 (mid-range)
+    if (val - 1.0).abs() > tolerance {
+        return Err(format!("Pivot violation: f(1.0) = {:.6} (expected 1.0) for {:?}", val, norm));
+    }
+    Ok(())
+}
+
+/// Validate ALL built-in normalization types. Panics on failure.
+/// Run this as a test and at startup to catch implementation bugs.
+pub fn validate_all_norms() {
+    let norms = vec![
+        NormType::Linear(0.75),
+        NormType::Power(0.5),
+        NormType::Power(0.4),
+        NormType::Log,
+        NormType::Sigmoid,
+        NormType::Hinged(0.5),
+        NormType::Asymmetric(0.8, 0.5),
+        NormType::Saturation(2.0),
+        NormType::Softplus,
+        NormType::DualPivot { s_short: 0.75, s_long: 0.5, alpha_long: 0.5 },
+        NormType::IdfConditioned { base_alpha: 0.6, gamma: 0.3 },
+        NormType::HingedIdf { base_alpha: 0.6, gamma: 0.3 },
+        NormType::RankEvolveLog { c: 0.15 },
+        NormType::Bidirectional { c: 0.06 },
+    ];
+    for norm in &norms {
+        if let Err(e) = validate_pivot(*norm, 1e-6) {
+            panic!("NORM VALIDATION FAILED: {}", e);
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn all_norms_satisfy_pivot_constraint() {
+        validate_all_norms();
+    }
+
+    #[test]
+    fn idf_conditioned_sign_correctness() {
+        // Rare terms (high idf_ratio) should get LESS normalization (lower alpha)
+        let norm = NormType::IdfConditioned { base_alpha: 0.7, gamma: 0.3 };
+        let r = 3.0; // long doc
+        let norm_rare = compute_norm(norm, r, 0.9);    // rare term
+        let norm_common = compute_norm(norm, r, 0.1);  // common term
+        assert!(norm_rare < norm_common,
+            "Rare terms should get LESS normalization: rare={:.3} should be < common={:.3}",
+            norm_rare, norm_common);
+    }
+
+    #[test]
+    fn norms_monotonically_increase_for_long_docs() {
+        // All norms should increase as r increases (longer docs = more normalization)
+        let norms: Vec<NormType> = vec![
+            NormType::Linear(0.75), NormType::Power(0.5), NormType::Log,
+            NormType::Sigmoid, NormType::Softplus, NormType::Bidirectional { c: 0.1 },
+        ];
+        for norm in norms {
+            let v1 = compute_norm(norm, 1.0, 0.5);
+            let v2 = compute_norm(norm, 2.0, 0.5);
+            let v3 = compute_norm(norm, 5.0, 0.5);
+            assert!(v1 <= v2 && v2 <= v3,
+                "Norm {:?} not monotonic: f(1)={:.3}, f(2)={:.3}, f(5)={:.3}", norm, v1, v2, v3);
+        }
+    }
 
     #[test]
     fn bm25_basic() {
