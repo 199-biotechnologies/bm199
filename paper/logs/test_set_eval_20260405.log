@@ -161,3 +161,4 @@ Finished: Sun  5 Apr 2026 11:52:05 BST
   Loaded 5416568 documents
   Loaded 123142 queries
   Loaded 6666 qrels entries
+  Index built in 133.983305125s (5416568 docs, avgdl=53.6)
