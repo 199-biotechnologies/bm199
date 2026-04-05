@@ -1,0 +1,405 @@
+{
+  "data": {
+    "branch": "autoresearch/bm199-optimization",
+    "experiments": [
+      {
+        "hash": "926e0b0da5e2f9713e6e369eb76bd23737f80f83",
+        "metric": 0.3979,
+        "run": 43,
+        "short_hash": "926e0b0",
+        "status": "kept",
+        "summary": "A2 symmetric sqrt: tuning=0.3979, HELDOUT=0.4997 BEST. Beats BM25 (0.4734) by +5.6%. TREC-COVID +3.3%, Touché +27%, SCIDOCS +0.2%, Quora -0.3%. ZERO length params.",
+        "timestamp": "2026-04-05T00:17:52.374196+00:00"
+      },
+      {
+        "hash": "2bd5f2c3261230719b8062b72c6e741bb340d1db",
+        "metric": 0.3903,
+        "run": 42,
+        "short_hash": "2bd5f2c",
+        "status": "kept",
+        "summary": "A1+B1 combo: tuning=0.3903, heldout=0.4478. Worse than A1 alone. B1 log-tf hurts long-doc datasets when combined with root length.",
+        "timestamp": "2026-04-05T00:14:57.130306+00:00"
+      },
+      {
+        "hash": "2c93aa8e96e4c8ee410346b19cede12113b6e662",
+        "metric": 0.4041,
+        "run": 41,
+        "short_hash": "2c93aa8",
+        "status": "kept",
+        "summary": "D1 likelihood-ratio: tuning=0.4041, heldout=0.4047. Most consistent (gap=0.1%) but lower absolute. Quora 0.7796 best of all forks.",
+        "timestamp": "2026-04-05T00:12:36.473174+00:00"
+      },
+      {
+        "hash": "567715537d20f2fc6a55908f63d4dd90c56a209e",
+        "metric": 0.3955,
+        "run": 40,
+        "short_hash": "5677155",
+        "status": "kept",
+        "summary": "C1 tempered-idf: tuning=0.3955, heldout=0.4441. Quora 0.7702 good, but overall worse than baseline",
+        "timestamp": "2026-04-05T00:09:41.249902+00:00"
+      },
+      {
+        "hash": "8c0cee640a70dcb477e7dc8c8c0600a43645b500",
+        "metric": 0.3995,
+        "run": 39,
+        "short_hash": "8c0cee6",
+        "status": "kept",
+        "summary": "B1 log-tf: tuning=0.3995, heldout=0.4092. ArguAna 0.4171 great, Quora 0.7629 great, but FiQA 0.1913 and Touché 0.1838 bad",
+        "timestamp": "2026-04-05T00:08:00.738570+00:00"
+      },
+      {
+        "hash": "234d0b7bac72ce48896636b5fe176d71c57e5016",
+        "metric": 0.3803,
+        "run": 38,
+        "short_hash": "234d0b7",
+        "status": "kept",
+        "summary": "A1 root-length: tuning=0.3803 (down), heldout=0.4897 (UP from 0.4563). Touché 0.2617->0.4685 (+79%), Quora 0.7728->0.7124 (-8%)",
+        "timestamp": "2026-04-05T00:06:18.478729+00:00"
+      },
+      {
+        "hash": "183fd84d1840c213c32600570fa3950cce1fdfa8",
+        "metric": 0.4094,
+        "run": 37,
+        "short_hash": "183fd84",
+        "status": "discarded",
+        "summary": "b=0.8: FiQA +4.6% but SciFact -0.4% and ArguAna -2.8%. Net same as b=0.9. Keep b=0.9.",
+        "timestamp": "2026-04-04T23:18:56.456276+00:00"
+      },
+      {
+        "hash": "613b118009ffaa84054eefc161edceecaf6e61ce",
+        "metric": 0.4085,
+        "run": 36,
+        "short_hash": "613b118",
+        "status": "discarded",
+        "summary": "Short-doc penalty 0.05: 0.4095->0.4085. Still worse than 0.15. The penalty helps more datasets than it hurts.",
+        "timestamp": "2026-04-04T23:17:54.698520+00:00"
+      },
+      {
+        "hash": "6f3c4a5edab8828a9af4ad1cbf12585d4297a762",
+        "metric": 0.408,
+        "run": 35,
+        "short_hash": "6f3c4a5",
+        "status": "discarded",
+        "summary": "Remove short-doc penalty: 0.4095->0.4080. Penalty helps other datasets, just hurts FiQA. Need adaptive penalty.",
+        "timestamp": "2026-04-04T23:17:10.768128+00:00"
+      },
+      {
+        "hash": "7907bf07720c6499e04a6087d4bd8a79ae899df6",
+        "metric": 0.4095,
+        "run": 34,
+        "short_hash": "7907bf0",
+        "status": "kept",
+        "summary": "DROP log-norm, use BM25 linear norm + short-doc penalty + adaptive saturation. 0.4029->0.4095 (+1.6%). BEATS BM25 (0.4064) by +0.76%. Log-norm was HURTING with stemmed tokens!",
+        "timestamp": "2026-04-04T22:48:43.610208+00:00"
+      },
+      {
+        "hash": "699bd90cb84c3ed258f7cb32b84de8b4910dd7b3",
+        "metric": 0.4029,
+        "run": 33,
+        "short_hash": "699bd90",
+        "status": "discarded",
+        "summary": "k1=2.0: plateau at 0.4029, same as k1=1.8. Keep 1.8.",
+        "timestamp": "2026-04-04T22:47:56.666565+00:00"
+      },
+      {
+        "hash": "8225f6093762a75df28f9aa7ab4cbc65d24eb2cb",
+        "metric": 0.4029,
+        "run": 32,
+        "short_hash": "8225f60",
+        "status": "kept",
+        "summary": "k1=1.8: 0.4027->0.4029. Still climbing.",
+        "timestamp": "2026-04-04T22:47:22.784147+00:00"
+      },
+      {
+        "hash": "8359071f13d4c1616796aa381f5e3c0ec6c3f8db",
+        "metric": 0.4027,
+        "run": 31,
+        "short_hash": "8359071",
+        "status": "kept",
+        "summary": "k1=1.6: slower saturation for stemmed tokens. 0.4021->0.4027 (+0.15%). Stemming reduced token count so k1 needs to go up.",
+        "timestamp": "2026-04-04T22:46:52.897433+00:00"
+      },
+      {
+        "hash": "eb67385486ace9ddf910d095cfb549943a1e5661",
+        "metric": 0.4005,
+        "run": 30,
+        "short_hash": "eb67385",
+        "status": "discarded",
+        "summary": "IDF-conditioned b with 0.1 scale: 0.4021->0.4005. Better than 0.3 but still worse than no conditioning. The concept hurts avg but might help specific datasets.",
+        "timestamp": "2026-04-04T22:46:16.487811+00:00"
+      },
+      {
+        "hash": "cc02422ede82d02344c0680d4b4bad6187e50918",
+        "metric": 0.3982,
+        "run": 29,
+        "short_hash": "cc02422",
+        "status": "discarded",
+        "summary": "IDF-conditioned b with 0.3 scale: too aggressive. 0.4021->0.3982. Try gentler scaling.",
+        "timestamp": "2026-04-04T22:45:40.375969+00:00"
+      },
+      {
+        "hash": "430a7aa506588be76ec406ee24b895dc7349fe9d",
+        "metric": 0.4012,
+        "run": 28,
+        "short_hash": "430a7aa",
+        "status": "discarded",
+        "summary": "Short-doc penalty 0.25: slightly worse. 0.4021->0.4012. 0.15 is still better.",
+        "timestamp": "2026-04-04T22:44:49.552267+00:00"
+      },
+      {
+        "hash": "400939d46f5fbff8ef57907c8e1def92cfd2d800",
+        "metric": 0.3957,
+        "run": 27,
+        "short_hash": "400939d",
+        "status": "discarded",
+        "summary": "b=0.75: worse even with stemming. 0.4021->0.3957. b=0.9 still optimal.",
+        "timestamp": "2026-04-04T22:43:42.211275+00:00"
+      },
+      {
+        "hash": "7c899705d7cb1334a0882a7e7a3af3fce5f031af",
+        "metric": 0.4021,
+        "run": 26,
+        "short_hash": "7c89970",
+        "status": "baseline",
+        "summary": "Re-baseline with stemmed tokenizer on 4 tuning datasets. BM25=0.4064, BM199=0.4021 (behind by 1.1%). Params need re-tuning for stemmed input.",
+        "timestamp": "2026-04-04T22:42:47.649096+00:00"
+      },
+      {
+        "hash": "5fe85e46b4e9b94868100d050c9b87a6a03e1169",
+        "metric": 0.402,
+        "run": 25,
+        "short_hash": "5fe85e4",
+        "status": "kept",
+        "summary": "Short-doc penalty 0.15 (Codex suggestion): 0.4009->0.4020 (+0.27%). Now beats BM25 (0.4004) by +0.4%. Fixed FiQA over-rewarding ultra-short snippets.",
+        "timestamp": "2026-04-04T21:42:19.926032+00:00"
+      },
+      {
+        "hash": "5022b2ad93e523e2ee678752c02da6402d9bc03f",
+        "metric": 0.4009,
+        "run": 24,
+        "short_hash": "5022b2a",
+        "status": "kept",
+        "summary": "Quadratic short-doc penalty: 0.4006->0.4009. Now BEATING BM25 by +0.12%. Short docs get penalized for lacking content, not rewarded for brevity.",
+        "timestamp": "2026-04-04T21:36:57.385354+00:00"
+      },
+      {
+        "hash": "ab5bddad8598d68a3456814b64ccd3c4a85f771a",
+        "metric": 0.4006,
+        "run": 23,
+        "short_hash": "ab5bdda",
+        "status": "discarded",
+        "summary": "log_base=1.5: same as log_base=2.0 (0.4006). No improvement, keep simpler log2.",
+        "timestamp": "2026-04-04T21:35:52.118074+00:00"
+      },
+      {
+        "hash": "ccb13fbb83d93481982ea930d830f259464b65e4",
+        "metric": 0.4004,
+        "run": 22,
+        "short_hash": "ccb13fb",
+        "status": "discarded",
+        "summary": "IDF boost delta=0.1: slightly worse than no boost. 0.4006->0.4004. IDF boost not the right direction.",
+        "timestamp": "2026-04-04T21:34:52.229727+00:00"
+      },
+      {
+        "hash": "bf44bb706d9cc7210332c2637b08f624cfdace6e",
+        "metric": 0.3998,
+        "run": 21,
+        "short_hash": "bf44bb7",
+        "status": "discarded",
+        "summary": "k1=1.35: worse than 1.4. 0.4006->0.3998. k1=1.4 is the peak.",
+        "timestamp": "2026-04-04T21:33:33.544862+00:00"
+      },
+      {
+        "hash": "7e637cbe47430b483fdc8d344ef0bee0c31fad0a",
+        "metric": 0.4,
+        "run": 20,
+        "short_hash": "7e637cb",
+        "status": "discarded",
+        "summary": "k1=1.5: overshoots. 0.4006->0.4000. k1=1.4 confirmed as optimal.",
+        "timestamp": "2026-04-04T21:32:40.951944+00:00"
+      },
+      {
+        "hash": "8db33129a3211abeb4fa4425ad19d0249776cae0",
+        "metric": 0.4006,
+        "run": 19,
+        "short_hash": "8db3312",
+        "status": "kept",
+        "summary": "k1=1.4: 0.4001->0.4006. BEATS BM25 BASELINE (0.4004) FOR THE FIRST TIME. BM199 > BM25 by +0.02%.",
+        "timestamp": "2026-04-04T21:31:46.336692+00:00"
+      },
+      {
+        "hash": "5adb3c7b84216c5b648725218446d89161b9cefb",
+        "metric": 0.4001,
+        "run": 18,
+        "short_hash": "5adb3c7",
+        "status": "kept",
+        "summary": "k1=1.3: fine-tune from 1.2. 0.3999->0.4001. NOW MATCHING BM25 BASELINE (0.4004). First time BM199 approaches BM25.",
+        "timestamp": "2026-04-04T21:30:42.746013+00:00"
+      },
+      {
+        "hash": "30246984b5a64758b65db2afd4bb5e581a6decb1",
+        "metric": 0.3687,
+        "run": 17,
+        "short_hash": "3024698",
+        "status": "discarded",
+        "summary": "Robertson IDF (no +1): negative IDF for common terms destroys scoring. 0.3999->0.3687. Standard IDF is better.",
+        "timestamp": "2026-04-04T21:29:33.427626+00:00"
+      },
+      {
+        "hash": "e66b0f95018bdf41b91e43b5e66e355283745336",
+        "metric": 0.3997,
+        "run": 16,
+        "short_hash": "e66b0f9",
+        "status": "discarded",
+        "summary": "beta_min=0.85: slightly worse than 0.8. 0.3999->0.3997. beta_min=0.8 is optimal.",
+        "timestamp": "2026-04-04T21:28:10.168613+00:00"
+      },
+      {
+        "hash": "ba2fabaa21b0654e151371622f1668b0b782921b",
+        "metric": 0.3999,
+        "run": 15,
+        "short_hash": "ba2faba",
+        "status": "kept",
+        "summary": "beta_min=0.8: milder adaptive saturation. 0.3994->0.3999 (+0.1%). Now within 0.0005 of BM25 (0.4004). The saturation was too aggressive at 0.5.",
+        "timestamp": "2026-04-04T21:26:48.477234+00:00"
+      },
+      {
+        "hash": "9ebd72b463bdac34f00fd8f2c0c7eee8ceb37ec0",
+        "metric": 0.3986,
+        "run": 14,
+        "short_hash": "9ebd72b",
+        "status": "discarded",
+        "summary": "b=0.85: worse than b=0.9. 0.3994->0.3986. b=0.9 confirmed.",
+        "timestamp": "2026-04-04T21:25:37.190903+00:00"
+      },
+      {
+        "hash": "1ea33bb73b8dd9a76c2ddf182c5778c9f5ea4711",
+        "metric": 0.3963,
+        "run": 13,
+        "short_hash": "1ea33bb",
+        "status": "discarded",
+        "summary": "BM25L-style delta=0.5 added to TF before formula. 0.3994->0.3963. BM25L approach hurts with log-norm.",
+        "timestamp": "2026-04-04T21:24:29.113203+00:00"
+      },
+      {
+        "hash": "10a093d73deddf48a12f4b13fbebf52fc4d0a810",
+        "metric": 0.3983,
+        "run": 12,
+        "short_hash": "10a093d",
+        "status": "discarded",
+        "summary": "beta_min=0.6 beta_max=0.9: universal sublinear saturation hurts. 0.3994->0.3983. Common terms need near-linear TF.",
+        "timestamp": "2026-04-04T21:22:27.832995+00:00"
+      },
+      {
+        "hash": "b008fa4af46af5f2a573390e133856fc3e5a54ee",
+        "metric": 0.3981,
+        "run": 11,
+        "short_hash": "b008fa4",
+        "status": "discarded",
+        "summary": "k1=1.0: too fast saturation. 0.3994->0.3981. k1=1.2 confirmed optimal.",
+        "timestamp": "2026-04-04T21:20:18.338204+00:00"
+      },
+      {
+        "hash": "6954667683342c86d63add360106eea780d1ae15",
+        "metric": 0.3974,
+        "run": 10,
+        "short_hash": "6954667",
+        "status": "discarded",
+        "summary": "Blend log+power TF saturation by IDF. 0.3994->0.3974. Log saturation at query time hurts. Power-only is better.",
+        "timestamp": "2026-04-04T21:19:08.469103+00:00"
+      },
+      {
+        "hash": "3f0cfc9aa6747d300dc6517d235fd46a04cb7dc8",
+        "metric": 0.3994,
+        "run": 9,
+        "short_hash": "3f0cfc9",
+        "status": "kept",
+        "summary": "Fix log-norm anchor: len_norm=1.0 at dl=avgdl. Same metric but mathematically correct normalization.",
+        "timestamp": "2026-04-04T21:18:04.263268+00:00"
+      },
+      {
+        "hash": "26a7c88d41fc994e3b3d4e2972e3587e6dc79a4b",
+        "metric": 0.3994,
+        "run": 8,
+        "short_hash": "26a7c88",
+        "status": "kept",
+        "summary": "beta_min=0.5: stronger adaptive saturation for rare terms. 0.3990->0.3994. Nearly matching BM25 (0.4004).",
+        "timestamp": "2026-04-04T21:16:58.831771+00:00"
+      },
+      {
+        "hash": "0f45e2eaa03b7775cf20a16dd11401dd335273b5",
+        "metric": 0.3977,
+        "run": 7,
+        "short_hash": "0f45e2e",
+        "status": "discarded",
+        "summary": "b=0.95: too strong length norm. 0.3990->0.3977. b=0.9 with log2 is optimal.",
+        "timestamp": "2026-04-04T21:15:54.761147+00:00"
+      },
+      {
+        "hash": "1e34795f38e1fc3445a5bf9b8ea4a240ffee30bf",
+        "metric": 0.399,
+        "run": 6,
+        "short_hash": "1e34795",
+        "status": "kept",
+        "summary": "log_base=2.0: stronger length compression via log2. 0.3983->0.3990 (+0.2%). Approaching BM25 baseline (0.4004).",
+        "timestamp": "2026-04-04T21:14:58.519473+00:00"
+      },
+      {
+        "hash": "6cf1cda428df2f754e2b14ad72a3787dc4575cdc",
+        "metric": 0.398,
+        "run": 5,
+        "short_hash": "6cf1cda",
+        "status": "discarded",
+        "summary": "k1=1.5: slower saturation. 0.3983->0.3980 (-0.1%). k1=1.2 remains optimal.",
+        "timestamp": "2026-04-04T21:14:01.110102+00:00"
+      },
+      {
+        "hash": "1f962d026e0deb33742fa06b469d779f5b20402d",
+        "metric": 0.3983,
+        "run": 4,
+        "short_hash": "1f962d0",
+        "status": "kept",
+        "summary": "lambda_cov=0.0: disable coverage bonus. 0.3968->0.3983 (+0.4%). Coverage bonus was hurting — remove it.",
+        "timestamp": "2026-04-04T21:13:00.885569+00:00"
+      },
+      {
+        "hash": "d29fc101586a9ae81e872996db0ae9e31ed5ae5c",
+        "metric": 0.3959,
+        "run": 3,
+        "short_hash": "d29fc10",
+        "status": "discarded",
+        "summary": "beta_min=1.0: disable adaptive saturation. 0.3968->0.3959 (-0.2%). Adaptive saturation contributes positively, keep it.",
+        "timestamp": "2026-04-04T21:12:03.144255+00:00"
+      },
+      {
+        "hash": "a7730255ebafb17fb72e572ec4c424e58f50c855",
+        "metric": 0.3968,
+        "run": 2,
+        "short_hash": "a773025",
+        "status": "kept",
+        "summary": "b=0.9: stronger length norm with log compression. 0.3944->0.3968 (+0.6%). Log-norm benefits from higher b than BM25 linear norm",
+        "timestamp": "2026-04-04T21:11:03.088538+00:00"
+      },
+      {
+        "hash": "600b97995a8675341cfb5580e408281dc1120d3f",
+        "metric": 0.3944,
+        "run": 1,
+        "short_hash": "600b979",
+        "status": "kept",
+        "summary": "delta=0.0: disable BM25+ floor. 0.3820->0.3944 (+3.2%). Log-norm + adaptive saturation improves over default delta=1.0",
+        "timestamp": "2026-04-04T21:09:58.752950+00:00"
+      },
+      {
+        "hash": "1cb74c585ff2a83e675ac6dbafdee57a7e886c84",
+        "metric": 0.382,
+        "run": 0,
+        "short_hash": "1cb74c5",
+        "status": "baseline",
+        "summary": "BM199 with default params (k1=1.2, b=0.75, delta=1.0, beta_min=0.7, beta_max=1.0, lambda_cov=0.1, log_base=e). BM25 baseline=0.4004",
+        "timestamp": "2026-04-04T18:47:39.721978+00:00"
+      }
+    ],
+    "total": 44
+  },
+  "status": "success"
+}

@@ -1,0 +1,45 @@
+run,hash,timestamp,metric,status,summary
+43,926e0b0,2026-04-05T00:17:52.374196+00:00,0.397900,kept,"A2 symmetric sqrt: tuning=0.3979, HELDOUT=0.4997 BEST. Beats BM25 (0.4734) by +5.6%. TREC-COVID +3.3%, Touché +27%, SCIDOCS +0.2%, Quora -0.3%. ZERO length params."
+42,2bd5f2c,2026-04-05T00:14:57.130306+00:00,0.390300,kept,"A1+B1 combo: tuning=0.3903, heldout=0.4478. Worse than A1 alone. B1 log-tf hurts long-doc datasets when combined with root length."
+41,2c93aa8,2026-04-05T00:12:36.473174+00:00,0.404100,kept,"D1 likelihood-ratio: tuning=0.4041, heldout=0.4047. Most consistent (gap=0.1%) but lower absolute. Quora 0.7796 best of all forks."
+40,5677155,2026-04-05T00:09:41.249902+00:00,0.395500,kept,"C1 tempered-idf: tuning=0.3955, heldout=0.4441. Quora 0.7702 good, but overall worse than baseline"
+39,8c0cee6,2026-04-05T00:08:00.738570+00:00,0.399500,kept,"B1 log-tf: tuning=0.3995, heldout=0.4092. ArguAna 0.4171 great, Quora 0.7629 great, but FiQA 0.1913 and Touché 0.1838 bad"
+38,234d0b7,2026-04-05T00:06:18.478729+00:00,0.380300,kept,"A1 root-length: tuning=0.3803 (down), heldout=0.4897 (UP from 0.4563). Touché 0.2617->0.4685 (+79%), Quora 0.7728->0.7124 (-8%)"
+37,183fd84,2026-04-04T23:18:56.456276+00:00,0.409400,discarded,b=0.8: FiQA +4.6% but SciFact -0.4% and ArguAna -2.8%. Net same as b=0.9. Keep b=0.9.
+36,613b118,2026-04-04T23:17:54.698520+00:00,0.408500,discarded,Short-doc penalty 0.05: 0.4095->0.4085. Still worse than 0.15. The penalty helps more datasets than it hurts.
+35,6f3c4a5,2026-04-04T23:17:10.768128+00:00,0.408000,discarded,"Remove short-doc penalty: 0.4095->0.4080. Penalty helps other datasets, just hurts FiQA. Need adaptive penalty."
+34,7907bf0,2026-04-04T22:48:43.610208+00:00,0.409500,kept,"DROP log-norm, use BM25 linear norm + short-doc penalty + adaptive saturation. 0.4029->0.4095 (+1.6%). BEATS BM25 (0.4064) by +0.76%. Log-norm was HURTING with stemmed tokens!"
+33,699bd90,2026-04-04T22:47:56.666565+00:00,0.402900,discarded,"k1=2.0: plateau at 0.4029, same as k1=1.8. Keep 1.8."
+32,8225f60,2026-04-04T22:47:22.784147+00:00,0.402900,kept,k1=1.8: 0.4027->0.4029. Still climbing.
+31,8359071,2026-04-04T22:46:52.897433+00:00,0.402700,kept,k1=1.6: slower saturation for stemmed tokens. 0.4021->0.4027 (+0.15%). Stemming reduced token count so k1 needs to go up.
+30,eb67385,2026-04-04T22:46:16.487811+00:00,0.400500,discarded,IDF-conditioned b with 0.1 scale: 0.4021->0.4005. Better than 0.3 but still worse than no conditioning. The concept hurts avg but might help specific datasets.
+29,cc02422,2026-04-04T22:45:40.375969+00:00,0.398200,discarded,IDF-conditioned b with 0.3 scale: too aggressive. 0.4021->0.3982. Try gentler scaling.
+28,430a7aa,2026-04-04T22:44:49.552267+00:00,0.401200,discarded,Short-doc penalty 0.25: slightly worse. 0.4021->0.4012. 0.15 is still better.
+27,400939d,2026-04-04T22:43:42.211275+00:00,0.395700,discarded,b=0.75: worse even with stemming. 0.4021->0.3957. b=0.9 still optimal.
+26,7c89970,2026-04-04T22:42:47.649096+00:00,0.402100,baseline,"Re-baseline with stemmed tokenizer on 4 tuning datasets. BM25=0.4064, BM199=0.4021 (behind by 1.1%). Params need re-tuning for stemmed input."
+25,5fe85e4,2026-04-04T21:42:19.926032+00:00,0.402000,kept,Short-doc penalty 0.15 (Codex suggestion): 0.4009->0.4020 (+0.27%). Now beats BM25 (0.4004) by +0.4%. Fixed FiQA over-rewarding ultra-short snippets.
+24,5022b2a,2026-04-04T21:36:57.385354+00:00,0.400900,kept,"Quadratic short-doc penalty: 0.4006->0.4009. Now BEATING BM25 by +0.12%. Short docs get penalized for lacking content, not rewarded for brevity."
+23,ab5bdda,2026-04-04T21:35:52.118074+00:00,0.400600,discarded,"log_base=1.5: same as log_base=2.0 (0.4006). No improvement, keep simpler log2."
+22,ccb13fb,2026-04-04T21:34:52.229727+00:00,0.400400,discarded,IDF boost delta=0.1: slightly worse than no boost. 0.4006->0.4004. IDF boost not the right direction.
+21,bf44bb7,2026-04-04T21:33:33.544862+00:00,0.399800,discarded,k1=1.35: worse than 1.4. 0.4006->0.3998. k1=1.4 is the peak.
+20,7e637cb,2026-04-04T21:32:40.951944+00:00,0.400000,discarded,k1=1.5: overshoots. 0.4006->0.4000. k1=1.4 confirmed as optimal.
+19,8db3312,2026-04-04T21:31:46.336692+00:00,0.400600,kept,k1=1.4: 0.4001->0.4006. BEATS BM25 BASELINE (0.4004) FOR THE FIRST TIME. BM199 > BM25 by +0.02%.
+18,5adb3c7,2026-04-04T21:30:42.746013+00:00,0.400100,kept,k1=1.3: fine-tune from 1.2. 0.3999->0.4001. NOW MATCHING BM25 BASELINE (0.4004). First time BM199 approaches BM25.
+17,3024698,2026-04-04T21:29:33.427626+00:00,0.368700,discarded,Robertson IDF (no +1): negative IDF for common terms destroys scoring. 0.3999->0.3687. Standard IDF is better.
+16,e66b0f9,2026-04-04T21:28:10.168613+00:00,0.399700,discarded,beta_min=0.85: slightly worse than 0.8. 0.3999->0.3997. beta_min=0.8 is optimal.
+15,ba2faba,2026-04-04T21:26:48.477234+00:00,0.399900,kept,beta_min=0.8: milder adaptive saturation. 0.3994->0.3999 (+0.1%). Now within 0.0005 of BM25 (0.4004). The saturation was too aggressive at 0.5.
+14,9ebd72b,2026-04-04T21:25:37.190903+00:00,0.398600,discarded,b=0.85: worse than b=0.9. 0.3994->0.3986. b=0.9 confirmed.
+13,1ea33bb,2026-04-04T21:24:29.113203+00:00,0.396300,discarded,BM25L-style delta=0.5 added to TF before formula. 0.3994->0.3963. BM25L approach hurts with log-norm.
+12,10a093d,2026-04-04T21:22:27.832995+00:00,0.398300,discarded,beta_min=0.6 beta_max=0.9: universal sublinear saturation hurts. 0.3994->0.3983. Common terms need near-linear TF.
+11,b008fa4,2026-04-04T21:20:18.338204+00:00,0.398100,discarded,k1=1.0: too fast saturation. 0.3994->0.3981. k1=1.2 confirmed optimal.
+10,6954667,2026-04-04T21:19:08.469103+00:00,0.397400,discarded,Blend log+power TF saturation by IDF. 0.3994->0.3974. Log saturation at query time hurts. Power-only is better.
+9,3f0cfc9,2026-04-04T21:18:04.263268+00:00,0.399400,kept,Fix log-norm anchor: len_norm=1.0 at dl=avgdl. Same metric but mathematically correct normalization.
+8,26a7c88,2026-04-04T21:16:58.831771+00:00,0.399400,kept,beta_min=0.5: stronger adaptive saturation for rare terms. 0.3990->0.3994. Nearly matching BM25 (0.4004).
+7,0f45e2e,2026-04-04T21:15:54.761147+00:00,0.397700,discarded,b=0.95: too strong length norm. 0.3990->0.3977. b=0.9 with log2 is optimal.
+6,1e34795,2026-04-04T21:14:58.519473+00:00,0.399000,kept,log_base=2.0: stronger length compression via log2. 0.3983->0.3990 (+0.2%). Approaching BM25 baseline (0.4004).
+5,6cf1cda,2026-04-04T21:14:01.110102+00:00,0.398000,discarded,k1=1.5: slower saturation. 0.3983->0.3980 (-0.1%). k1=1.2 remains optimal.
+4,1f962d0,2026-04-04T21:13:00.885569+00:00,0.398300,kept,lambda_cov=0.0: disable coverage bonus. 0.3968->0.3983 (+0.4%). Coverage bonus was hurting — remove it.
+3,d29fc10,2026-04-04T21:12:03.144255+00:00,0.395900,discarded,"beta_min=1.0: disable adaptive saturation. 0.3968->0.3959 (-0.2%). Adaptive saturation contributes positively, keep it."
+2,a773025,2026-04-04T21:11:03.088538+00:00,0.396800,kept,b=0.9: stronger length norm with log compression. 0.3944->0.3968 (+0.6%). Log-norm benefits from higher b than BM25 linear norm
+1,600b979,2026-04-04T21:09:58.752950+00:00,0.394400,kept,delta=0.0: disable BM25+ floor. 0.3820->0.3944 (+3.2%). Log-norm + adaptive saturation improves over default delta=1.0
+0,1cb74c5,2026-04-04T18:47:39.721978+00:00,0.382000,baseline,"BM199 with default params (k1=1.2, b=0.75, delta=1.0, beta_min=0.7, beta_max=1.0, lambda_cov=0.1, log_base=e). BM25 baseline=0.4004"

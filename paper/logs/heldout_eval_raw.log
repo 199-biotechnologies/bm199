@@ -1,0 +1,109 @@
+warning: unused import: `std::path::PathBuf`
+  --> src/bin/eval.rs:10:5
+   |
+10 | use std::path::PathBuf;
+   |     ^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `bm199` (bin "bm199-eval") generated 1 warning (run `cargo fix --bin "bm199-eval" -p bm199` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 0.08s
+     Running `target/release/bm199-eval --split heldout`
+=== Evaluating trec-covid ===
+  Loaded 171332 documents
+  Loaded 50 queries
+  Loaded 50 qrels entries
+  Index built in 7.044505958s (171332 docs, avgdl=110.5)
+  bm25 | nDCG@10=0.6348 MAP=0.0865 R@100=0.1227 MRR=0.9167 | 374 QPS (133.798667ms)
+  bm25+ | nDCG@10=0.5786 MAP=0.0767 R@100=0.1163 MRR=0.8473 | 399 QPS (125.425333ms)
+  bm25l | nDCG@10=0.5959 MAP=0.0798 R@100=0.1180 MRR=0.8817 | 397 QPS (126.049292ms)
+  atire | nDCG@10=0.6348 MAP=0.0865 R@100=0.1227 MRR=0.9167 | 398 QPS (125.489958ms)
+  dlh13 | nDCG@10=0.5979 MAP=0.0684 R@100=0.1064 MRR=0.9200 | 250 QPS (200.206417ms)
+  qld | nDCG@10=0.0044 MAP=0.0001 R@100=0.0004 MRR=0.0215 | 286 QPS (174.628125ms)
+  tfidf | nDCG@10=0.5139 MAP=0.0714 R@100=0.1120 MRR=0.7281 | 375 QPS (133.178625ms)
+  bm199 | nDCG@10=0.6559 MAP=0.0899 R@100=0.1265 MRR=0.8967 | 120 QPS (417.534292ms)
+=== Evaluating quora ===
+  Loaded 522931 documents
+  Loaded 15000 queries
+  Loaded 10000 qrels entries
+  Index built in 1.339331333s (522931 docs, avgdl=5.9)
+  bm25 | nDCG@10=0.7831 MAP=0.7420 R@100=0.9721 MRR=0.7763 | 2448 QPS (6.127798667s)
+  bm25+ | nDCG@10=0.7823 MAP=0.7416 R@100=0.9702 MRR=0.7747 | 2452 QPS (6.117445166s)
+  bm25l | nDCG@10=0.7833 MAP=0.7428 R@100=0.9708 MRR=0.7760 | 2446 QPS (6.13146925s)
+  atire | nDCG@10=0.7831 MAP=0.7421 R@100=0.9721 MRR=0.7763 | 2427 QPS (6.179794625s)
+  dlh13 | nDCG@10=0.7574 MAP=0.7158 R@100=0.9584 MRR=0.7481 | 1622 QPS (9.247617125s)
+  qld | nDCG@10=0.0030 MAP=0.0027 R@100=0.0143 MRR=0.0027 | 1790 QPS (8.3787705s)
+  tfidf | nDCG@10=0.5643 MAP=0.5115 R@100=0.9283 MRR=0.5351 | 2495 QPS (6.011373459s)
+  bm199 | nDCG@10=0.7808 MAP=0.7395 R@100=0.9719 MRR=0.7735 | 786 QPS (19.0803555s)
+=== Evaluating scidocs ===
+  Loaded 25657 documents
+  Loaded 1000 queries
+  Loaded 1000 qrels entries
+  Index built in 1.093640334s (25657 docs, avgdl=115.9)
+  bm25 | nDCG@10=0.1569 MAP=0.1068 R@100=0.3653 MRR=0.2874 | 3030 QPS (329.983292ms)
+  bm25+ | nDCG@10=0.1478 MAP=0.0996 R@100=0.3472 MRR=0.2741 | 3020 QPS (331.088458ms)
+  bm25l | nDCG@10=0.1502 MAP=0.1018 R@100=0.3513 MRR=0.2785 | 3017 QPS (331.459541ms)
+  atire | nDCG@10=0.1570 MAP=0.1070 R@100=0.3655 MRR=0.2880 | 2990 QPS (334.500375ms)
+  dlh13 | nDCG@10=0.1524 MAP=0.1029 R@100=0.3539 MRR=0.2843 | 2079 QPS (480.95525ms)
+  qld | nDCG@10=0.0010 MAP=0.0005 R@100=0.0083 MRR=0.0023 | 2401 QPS (416.488958ms)
+  tfidf | nDCG@10=0.1277 MAP=0.0859 R@100=0.3369 MRR=0.2316 | 3028 QPS (330.22175ms)
+  bm199 | nDCG@10=0.1572 MAP=0.1067 R@100=0.3653 MRR=0.2852 | 1352 QPS (739.47725ms)
+=== Evaluating webis-touche2020 ===
+  Loaded 382545 documents
+  Loaded 49 queries
+  Loaded 49 qrels entries
+  Index built in 23.635022375s (382545 docs, avgdl=159.0)
+  bm25 | nDCG@10=0.3189 MAP=0.1999 R@100=0.5461 MRR=0.6111 | 503 QPS (97.46975ms)
+  bm25+ | nDCG@10=0.3329 MAP=0.2009 R@100=0.5377 MRR=0.6118 | 509 QPS (96.329917ms)
+  bm25l | nDCG@10=0.3382 MAP=0.2070 R@100=0.5488 MRR=0.6063 | 512 QPS (95.738334ms)
+  atire | nDCG@10=0.3189 MAP=0.1999 R@100=0.5461 MRR=0.6111 | 511 QPS (95.805041ms)
+  dlh13 | nDCG@10=0.2860 MAP=0.1858 R@100=0.5442 MRR=0.5231 | 355 QPS (137.919833ms)
+  qld | nDCG@10=0.0052 MAP=0.0018 R@100=0.0107 MRR=0.0315 | 400 QPS (122.440375ms)
+  tfidf | nDCG@10=0.5110 MAP=0.2875 R@100=0.5443 MRR=0.8527 | 575 QPS (85.254417ms)
+  bm199 | nDCG@10=0.4048 MAP=0.2571 R@100=0.5979 MRR=0.6896 | 169 QPS (290.142917ms)
+=== Evaluating nq ===
+  Loaded 2681468 documents
+  Loaded 3452 queries
+  Loaded 3452 qrels entries
+  Index built in 55.465099s (2681468 docs, avgdl=50.3)
+  bm25 | nDCG@10=0.2898 MAP=0.2446 R@100=0.7478 MRR=0.2624 | 102 QPS (33.721676042s)
+  bm25+ | nDCG@10=0.2951 MAP=0.2514 R@100=0.7480 MRR=0.2686 | 102 QPS (33.914422584s)
+  bm25l | nDCG@10=0.2974 MAP=0.2528 R@100=0.7527 MRR=0.2701 | 101 QPS (34.047908125s)
+  atire | nDCG@10=0.2898 MAP=0.2446 R@100=0.7478 MRR=0.2624 | 102 QPS (33.815392834s)
+  dlh13 | nDCG@10=0.3068 MAP=0.2601 R@100=0.7545 MRR=0.2774 | 67 QPS (51.909096375s)
+  qld | nDCG@10=0.0002 MAP=0.0001 R@100=0.0016 MRR=0.0001 | 74 QPS (46.344111584s)
+  tfidf | nDCG@10=0.2152 MAP=0.1800 R@100=0.6687 MRR=0.1931 | 109 QPS (31.788973958s)
+  bm199 | nDCG@10=0.2909 MAP=0.2467 R@100=0.7522 MRR=0.2633 | 26 QPS (131.598965042s)
+=== Evaluating dbpedia-entity ===
+  Loaded 4635922 documents
+  Loaded 467 queries
+  Loaded 400 qrels entries
+  Index built in 65.713367041s (4635922 docs, avgdl=33.6)
+  bm25 | nDCG@10=0.2908 MAP=0.2202 R@100=0.4622 MRR=0.6051 | 144 QPS (3.23690375s)
+  bm25+ | nDCG@10=0.2900 MAP=0.2201 R@100=0.4738 MRR=0.5764 | 145 QPS (3.224636916s)
+  bm25l | nDCG@10=0.2911 MAP=0.2210 R@100=0.4743 MRR=0.5789 | 145 QPS (3.220903167s)
+  atire | nDCG@10=0.2908 MAP=0.2202 R@100=0.4622 MRR=0.6051 | 144 QPS (3.23457625s)
+  dlh13 | nDCG@10=0.2991 MAP=0.2247 R@100=0.4764 MRR=0.5908 | 91 QPS (5.131624333s)
+  qld | nDCG@10=0.0044 MAP=0.0031 R@100=0.0165 MRR=0.0138 | 103 QPS (4.548661s)
+  tfidf | nDCG@10=0.2592 MAP=0.1815 R@100=0.4304 MRR=0.5284 | 142 QPS (3.29846425s)
+  bm199 | nDCG@10=0.2959 MAP=0.2223 R@100=0.4637 MRR=0.6035 | 36 QPS (13.006193542s)
+=== Evaluating climate-fever ===
+  Loaded 5416593 documents
+  Loaded 1535 queries
+  Loaded 1535 qrels entries
+  Index built in 131.588054583s (5416593 docs, avgdl=55.3)
+  bm25 | nDCG@10=0.1365 MAP=0.1019 R@100=0.3769 MRR=0.1968 | 29 QPS (52.771311792s)
+  bm25+ | nDCG@10=0.1431 MAP=0.1058 R@100=0.4034 MRR=0.2049 | 29 QPS (52.48113275s)
+  bm25l | nDCG@10=0.1492 MAP=0.1108 R@100=0.4121 MRR=0.2135 | 29 QPS (52.464767666s)
+  atire | nDCG@10=0.1365 MAP=0.1019 R@100=0.3769 MRR=0.1968 | 29 QPS (52.771238041s)
+  dlh13 | nDCG@10=0.1565 MAP=0.1161 R@100=0.4199 MRR=0.2220 | 17 QPS (88.564216583s)
+  qld | nDCG@10=0.0002 MAP=0.0003 R@100=0.0052 MRR=0.0009 | 19 QPS (80.132040416s)
+  tfidf | nDCG@10=0.1425 MAP=0.1029 R@100=0.4273 MRR=0.1975 | 30 QPS (51.946969958s)
+  bm199 | nDCG@10=0.1817 MAP=0.1344 R@100=0.4419 MRR=0.2522 | 8 QPS (195.841122708s)
+=== Evaluating fever ===
+  Loaded 5416568 documents
+  Loaded 123142 queries
+  Loaded 6666 qrels entries
+  Index built in 128.544807417s (5416568 docs, avgdl=55.3)
+  bm25 | nDCG@10=0.5077 MAP=0.4542 R@100=0.8609 MRR=0.4759 | 30 QPS (4161.667288625s)
+  bm25+ | nDCG@10=0.5868 MAP=0.5358 R@100=0.8891 MRR=0.5597 | 30 QPS (4161.412426833s)

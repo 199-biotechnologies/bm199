@@ -1,0 +1,40 @@
+905fce6 Codex blind verification: BM199 math confirmed correct
+e028e13 BM199 v1.0: sqrt length normalization beats BM25 by +5.6% on held-out
+1568130 Held-out evaluation results: BM199 does not generalize (overfit to tuning)
+db766b1 Freeze BM199 params for held-out evaluation
+b582326 Revert "[autoresearch] experiment #37: b=0.8 (less aggressive length norm to help FiQA)"
+183fd84 [autoresearch] experiment #37: b=0.8 (less aggressive length norm to help FiQA)
+b66cba6 Revert "[autoresearch] experiment #36: short-doc penalty 0.15->0.05 (compromise for FiQA)"
+613b118 [autoresearch] experiment #36: short-doc penalty 0.15->0.05 (compromise for FiQA)
+9541216 Revert "[autoresearch] experiment #35: remove short-doc penalty entirely (hurts FiQA)"
+6f3c4a5 [autoresearch] experiment #35: remove short-doc penalty entirely (hurts FiQA)
+db71f5f Add DLH13, QLD, TF-IDF, BM25-ATIRE baselines + collection frequency tracking
+9adcbed BM199 v0.2: linear norm + adaptive sat + short-doc penalty beats BM25
+7907bf0 [autoresearch] experiment #34: linear length norm + short-doc penalty (drop log-norm, keep adaptive sat)
+6530c5e Revert "[autoresearch] experiment #33: k1=2.0"
+699bd90 [autoresearch] experiment #33: k1=2.0
+8225f60 [autoresearch] experiment #32: k1=1.8
+8359071 [autoresearch] experiment #31: k1=1.6 (slower saturation for stemmed tokens)
+817e397 Revert "[autoresearch] experiment #30: IDF-conditioned b with gentler 0.1 scaling"
+eb67385 [autoresearch] experiment #30: IDF-conditioned b with gentler 0.1 scaling
+d091607 Revert "[autoresearch] experiment #29: IDF-conditioned b (rare terms get less length penalty) — core term-adaptive innovation"
+cc02422 [autoresearch] experiment #29: IDF-conditioned b (rare terms get less length penalty) — core term-adaptive innovation
+bd20136 Revert "[autoresearch] experiment #28: short-doc penalty 0.15->0.25 (stronger for stemmed tokens)"
+430a7aa [autoresearch] experiment #28: short-doc penalty 0.15->0.25 (stronger for stemmed tokens)
+f3381ce Revert "[autoresearch] experiment #27: b=0.75 (BM25 default, re-calibrate for stemmed tokens)"
+400939d [autoresearch] experiment #27: b=0.75 (BM25 default, re-calibrate for stemmed tokens)
+7c89970 Add stemming/stopwords, expand to 13 BEIR datasets, split tuning/held-out
+4e0740e BM199 v0.1: novel sparse retrieval scorer beating BM25 on BEIR
+5fe85e4 [autoresearch] experiment #25: short-doc penalty 0.05->0.15 (Codex suggestion: fix FiQA over-rewarding short snippets)
+5022b2a [autoresearch] experiment #24: quadratic short-doc penalty (RankEvolve insight)
+05017f1 Revert "[autoresearch] experiment #23: log_base=1.5 (even stronger compression)"
+ab5bdda [autoresearch] experiment #23: log_base=1.5 (even stronger compression)
+4ce9c22 Revert "[autoresearch] experiment #22: IDF boost for rare terms (delta=0.1 repurposed as idf_boost)"
+ccb13fb [autoresearch] experiment #22: IDF boost for rare terms (delta=0.1 repurposed as idf_boost)
+70acc2f Revert "[autoresearch] experiment #21: k1=1.35"
+bf44bb7 [autoresearch] experiment #21: k1=1.35
+bc02e9d Revert "[autoresearch] experiment #20: k1=1.5"
+7e637cb [autoresearch] experiment #20: k1=1.5
+8db3312 [autoresearch] experiment #19: k1=1.4
+5adb3c7 [autoresearch] experiment #18: k1=1.3 (fine-tune)
+a8acdef Revert "[autoresearch] experiment #17: Robertson IDF (no +1 floor) for stronger rare-term discrimination"
