@@ -104,3 +104,10 @@ Started: Sun  5 Apr 2026 08:40:06 BST
 }
 
 Finished: Sun  5 Apr 2026 11:52:05 BST
+=== Power(alpha=0.40, k1=1.5) on test set ===
+    Finished `release` profile [optimized] target(s) in 0.07s
+     Running `target/release/bm199-eval --split test --scorer generic --norm power --alpha 0.40 --k1 1.5 --label power_0.40_k1.5`
+=== Evaluating fever ===
+  Loaded 5416568 documents
+  Loaded 123142 queries
+  Loaded 6666 qrels entries
