@@ -110,8 +110,11 @@ impl BeirDataset {
     }
 }
 
-/// Lucene EnglishAnalyzer-equivalent tokenizer:
-/// lowercase -> split on non-alphanumeric -> strip possessives -> stopword removal -> Porter stemming
+/// Tokenizer approximating Lucene EnglishAnalyzer:
+/// lowercase -> strip possessives -> split on non-alphanumeric -> stopword removal -> Porter stemming
+/// NOTE: Not identical to Lucene. Differences: split uses char-level non-alphanumeric (not
+/// StandardTokenizer UAX#29), possessive stripping is pre-split (not token filter), and
+/// tokens >50 chars are dropped. Validate against Pyserini for reproducibility.
 pub fn tokenize(text: &str) -> Vec<String> {
     use rust_stemmers::{Algorithm, Stemmer};
     let stemmer = Stemmer::create(Algorithm::English);
@@ -139,19 +142,16 @@ pub fn tokenize_raw(text: &str) -> Vec<String> {
         .collect()
 }
 
-/// Lucene English stopword list
+/// Lucene EnglishAnalyzer default stopword list (33 words).
+/// Source: org.apache.lucene.analysis.en.EnglishAnalyzer.getDefaultStopSet()
+/// https://github.com/apache/lucene/blob/main/lucene/analysis/common/src/java/org/apache/lucene/analysis/en/EnglishAnalyzer.java
+/// IMPORTANT: Do NOT add extra words (question words, pronouns, etc.) — this must
+/// match Lucene exactly for reproducible BM25 baselines.
 const ENGLISH_STOPWORDS: &[&str] = &[
-    "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in",
-    "into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the",
-    "their", "then", "there", "these", "they", "this", "to", "was", "will", "with",
-    "do", "does", "did", "has", "have", "had", "he", "she", "we", "you", "his",
-    "her", "its", "our", "your", "my", "me", "him", "us", "them", "what", "which",
-    "who", "whom", "when", "where", "why", "how", "all", "each", "every", "both",
-    "few", "more", "most", "other", "some", "am", "been", "being", "were", "would",
-    "could", "should", "can", "may", "might", "shall", "about", "above", "after",
-    "again", "between", "from", "further", "here", "just", "only", "own", "same",
-    "so", "than", "too", "very", "also", "because", "before", "below", "down",
-    "during", "out", "over", "through", "under", "until", "up", "while",
+    "a", "an", "and", "are", "as", "at", "be", "but", "by",
+    "for", "if", "in", "into", "is", "it", "no", "not", "of",
+    "on", "or", "such", "that", "the", "their", "then", "there",
+    "these", "they", "this", "to", "was", "will", "with",
 ];
 
 /// Get BEIR data directory, downloading if needed
