@@ -44,6 +44,8 @@ fn parse_generic_config(args: &[String]) -> (String, ScoringConfig) {
         "dualpivot" => NormType::DualPivot { s_short, s_long, alpha_long: alpha },
         "idfcond" => NormType::IdfConditioned { base_alpha: alpha, gamma: get_f64(args, "--gamma", 0.3) },
         "hingedidf" => NormType::HingedIdf { base_alpha: alpha, gamma: get_f64(args, "--gamma", 0.3) },
+        "rankevolvelog" | "relog" => NormType::RankEvolveLog { c: get_f64(args, "--c", 0.15) },
+        "bidirectional" | "bidir" => NormType::Bidirectional { c: get_f64(args, "--c", 0.06) },
         _ => NormType::Power(0.5),
     };
 

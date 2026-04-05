@@ -45,6 +45,27 @@
 3. **The "b" parameter IS the problem**: BM25's b=0.75 default is close to optimal.
    Even tuned b=1.0 (which looks great on tuning) degrades on validation.
 
+## RankEvolve-Inspired Results (tested 2026-04-05)
+
+Both RankEvolve-style norms UNDERPERFORM on tuning when used alone:
+- Best RankEvolve log norm: 0.3749 (c=0.50, k1=1.0) — vs BM25 0.4091
+- Best Bidirectional: 0.3706 (c=0.30, k1=1.0) — vs BM25 0.4091
+- These are too gentle as standalone norms; RankEvolve uses them as ONE component
+  among many (coverage multiplier, PMI specificity, coordination, etc.)
+- The individual components need to be COMBINED, not tested in isolation
+
+## Research Agent Findings (2025-2026 Literature)
+
+**Most promising untested ideas (from 10-area landscape scan):**
+1. **RankEvolve formula (combined):** log norm + coverage + PMI + adaptive TF + leaky rectifier
+2. **iDL (DLITE paper):** Information-theoretic IDF replacement, beats BM25 on 3 decades of TREC data
+3. **BMX entropy-weighted IDF:** Replaces k1 saturation with entropy-augmented term
+4. **Verboseness Fission (Lipani):** Decomposes b into verbosity/scope components, parameter-free
+5. **BM25P proximity:** Replace TF with pseudo-TF based on proximity kernel, +5-11% MAP
+6. **LexBoost:** Graph-based neighbor score smoothing, +7-17% MAP (needs neighbor graph)
+7. **SPLADE-style log(1+x) saturation:** Already tested as our "log TF" variant (0.4103 tuning)
+8. **BM42 attention-as-TF:** Replace TF with transformer attention weights (needs model)
+
 ## Untested Hypotheses (Phase 2)
 
 ### IDF-Conditioned Normalization (HIGH PRIORITY, NOVEL)

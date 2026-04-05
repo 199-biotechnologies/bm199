@@ -203,6 +203,11 @@ pub enum NormType {
     IdfConditioned { base_alpha: f64, gamma: f64 },
     /// Hinged + IDF: combine hinged (linear short, power long) with IDF conditioning
     HingedIdf { base_alpha: f64, gamma: f64 },
+    /// RankEvolve's log norm: 1 + c * ln(1 + r). Gentler than any power for long docs.
+    RankEvolveLog { c: f64 },
+    /// Bidirectional: penalizes deviation from avgdl in BOTH directions.
+    /// norm = 1 + c * (ln(r))^2. Documents at avgdl get norm=1, both shorter and longer get penalized.
+    Bidirectional { c: f64 },
 }
 
 /// TF transformation mode
@@ -285,6 +290,20 @@ pub fn compute_norm(norm: NormType, r: f64, idf_ratio: f64) -> f64 {
         NormType::HingedIdf { base_alpha, gamma } => {
             let alpha = (base_alpha + gamma * idf_ratio).clamp(0.1, 1.5);
             if r <= 1.0 { r } else { r.powf(alpha) }
+        }
+        NormType::RankEvolveLog { c } => {
+            // From RankEvolve (2026): 1 + c * ln(1 + r)
+            // At r=1: 1 + c*ln(2) ≈ 1 + 0.693c. We normalize so f(1)=1:
+            // norm = (1 + c * ln(1+r)) / (1 + c * ln(2))
+            let raw = 1.0 + c * (1.0 + r).ln();
+            let pivot = 1.0 + c * 2.0_f64.ln();
+            raw / pivot
+        }
+        NormType::Bidirectional { c } => {
+            // Penalizes deviation from avgdl in both directions
+            // norm = 1 + c * (ln(r))^2. At r=1: norm=1. Both r<1 and r>1 increase norm.
+            let log_r = r.ln();
+            1.0 + c * log_r * log_r
         }
     }
 }

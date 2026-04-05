@@ -163,3 +163,4 @@ delta_sqrt,1.8,power,a=0.5,d=0.5,0.392938
 delta_linear,1.2,linear,b=0.75,d=0.5,0.402441
 delta_sqrt,1.8,power,a=0.5,d=1.0,0.391550
 delta_linear,1.2,linear,b=0.75,d=1.0,0.397101
+RankEvolve-inspired norms: both underperform on tuning. Best relog=0.3749, best bidir=0.3706.

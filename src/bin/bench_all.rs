@@ -47,6 +47,8 @@ fn parse_config(args: &[String]) -> ScoringConfig {
         "dualpivot" => NormType::DualPivot { s_short, s_long, alpha_long: alpha },
         "idfcond" => NormType::IdfConditioned { base_alpha: alpha, gamma: getf("--gamma", 0.3) },
         "hingedidf" => NormType::HingedIdf { base_alpha: alpha, gamma: getf("--gamma", 0.3) },
+        "rankevolvelog" | "relog" => NormType::RankEvolveLog { c: getf("--c", 0.15) },
+        "bidirectional" | "bidir" => NormType::Bidirectional { c: getf("--c", 0.06) },
         _ => NormType::Power(0.5), // default to sqrt
     };
 
