@@ -154,3 +154,10 @@ Finished: Sun  5 Apr 2026 11:52:05 BST
     }
   ]
 }
+=== BM25(k1=1.5, b=0.75) on test set — k1 control ===
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running `target/release/bm199-eval --split test --scorer generic --norm linear --b 0.75 --k1 1.5 --label bm25_k1.5`
+=== Evaluating fever ===
+  Loaded 5416568 documents
+  Loaded 123142 queries
+  Loaded 6666 qrels entries
