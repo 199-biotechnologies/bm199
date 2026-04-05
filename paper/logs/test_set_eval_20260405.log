@@ -8,3 +8,4 @@ Started: Sun  5 Apr 2026 08:40:06 BST
   Loaded 5416568 documents
   Loaded 123142 queries
   Loaded 6666 qrels entries
+  Index built in 155.218127042s (5416568 docs, avgdl=53.6)
