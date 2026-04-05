@@ -1,0 +1,17 @@
+**Verdict**
+
+Potentially publishable, yes, but not yet as a strong full-paper claim. A `+0.0273` absolute gain in `nDCG@10` (`0.3725 -> 0.3998`, `+7.3%` relative) is interesting. The weaker part is the robustness claim: `0.3994 -> 0.3998` is effectively “no detectable loss on this split,” not strong evidence by itself.
+
+**Best Venue**
+
+- `ECIR` or `SIGIR-AP` if you can turn this into a solid multi-collection empirical paper.
+- `ICTIR` if you can explain *why* square-root normalization works, not just that it wins.
+- `SIGIR` only if you add stronger evidence: multiple standard benchmarks, paired significance tests, strong lexical baselines, and a convincing theoretical story.
+- `WSDM` only if you have web-scale or production evidence.
+
+My inference: as described, this is closer to a good short/reproducibility-style IR paper than a clear top-tier full paper.
+
+**Methodology Weaknesses**
+
+- `250+` configs creates a multiple-comparisons problem. You need an untouched test set after model selection, ideally nested tuning.
+- Comparing against BM25 *default* is not enough. You need best tuned vanilla BM25 and established variants like `BM25L`, `BM25+`, and `BM25-Adpt`.
