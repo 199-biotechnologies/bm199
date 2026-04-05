@@ -111,3 +111,10 @@ Finished: Sun  5 Apr 2026 11:52:05 BST
   Loaded 5416568 documents
   Loaded 123142 queries
   Loaded 6666 qrels entries
+  Index built in 125.115308375s (5416568 docs, avgdl=53.6)
+  power_0.40_k1.5 | nDCG@10=0.6455 MAP=0.5898 R@100=0.9189 MRR=0.6191 | 41 QPS (2990.084148625s)
+=== Evaluating hotpotqa ===
+  Loaded 5233329 documents
+  Loaded 97852 queries
+  Loaded 7405 qrels entries
+  Index built in 66.376825209s (5233329 docs, avgdl=30.1)
