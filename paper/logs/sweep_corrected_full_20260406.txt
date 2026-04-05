@@ -1,0 +1,26 @@
+=== FULL SWEEP WITH CORRECTED TOKENIZER ===
+=================================================================
+SWEEP COMPLETE. Results saved to: paper/logs/norm_sweep_20260406_000115.csv
+=================================================================
+
+--- TOP 20 HYPOTHESES ---
+hinged,1.5,hinged,a=0.80,,0.409314
+power,1.8,power,a=0.90,,0.409114
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.75 a=0.60,0.408573
+power,1.8,power,a=0.80,,0.408463
+bm25_tuned,1.2,linear,b=1.00,,0.408275
+bm25_tuned,1.2,linear,b=0.90,,0.408073
+hinged,1.8,hinged,a=0.80,,0.407941
+saturation,1.5,saturation,c=5.0,,0.407770
+saturation,1.8,saturation,c=5.0,,0.407714
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.75 a=0.50,0.407498
+hinged,1.2,hinged,a=0.80,,0.407202
+log_tf,1.8,power,a=0.5,tf=log,0.407090
+hinged,1.5,hinged,a=0.70,,0.406997
+hinged,1.8,hinged,a=0.70,,0.406983
+power,1.8,power,a=0.75,,0.406888
+asymmetric,1.8,asymmetric,a1=0.90,a2=0.60,0.406675
+dualpivot,1.8,dualpivot,ss=1.00,sl=0.75 a=0.40,0.406094
+hinged,1.8,hinged,a=0.60,,0.405829
+asymmetric,1.8,asymmetric,a1=1.00,a2=0.60,0.405829
+log_tf,1.5,power,a=0.5,tf=log,0.405783
