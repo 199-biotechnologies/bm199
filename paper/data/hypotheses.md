@@ -23,7 +23,26 @@
 | 15 | Log | 1.6 | 0 params | 0.4096 | Zero-param, good generalization |
 | 16 | Sqrt (BM199) | 1.6 | α=0.5 | 0.3991 | Original BM199 — poor tuning |
 
-### Validation Results (pending full run)
+### TRUE TEST SET Results (UNCONTAMINATED — FEVER + HotpotQA)
+
+| Scorer | FEVER | HotpotQA | Average | vs BM25 |
+|--------|-------|----------|---------|---------|
+| BM25 (k1=1.2, b=0.75) | 0.5030 | 0.5893 | 0.5462 | — |
+| **Sqrt (k1=1.5)** | **0.6195** | **0.6154** | **0.6174** | **+13.0%** |
+| Power(α=0.40, k1=1.5) | (running) | (running) | (running) | (pending) |
+
+### Power Family on Validation (all k1=1.5)
+
+| α | Validation nDCG@10 | vs BM25 (0.3725) |
+|---|-------------------|------------------|
+| 0.30 | 0.3989 | +7.1% |
+| **0.40** | **0.4041** | **+8.5%** |
+| 0.50 (sqrt) | 0.3998 | +7.3% |
+| 0.60 | 0.3831 | +2.8% |
+| 0.70 | 0.3643 | -2.2% |
+| 0.80 | 0.3489 | -6.3% |
+
+### Validation Results (9 variants)
 
 | Variant | Tuning | Validation | Gap | Generalizes? |
 |---------|--------|------------|-----|--------------|
