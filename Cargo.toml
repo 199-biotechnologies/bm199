@@ -30,3 +30,7 @@ path = "src/bin/eval.rs"
 [[bin]]
 name = "bm199-bench-all"
 path = "src/bin/bench_all.rs"
+
+[[bin]]
+name = "significance"
+path = "src/bin/significance.rs"

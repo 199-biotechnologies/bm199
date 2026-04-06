@@ -109,6 +109,58 @@ pub fn evaluate_all(
     }
 }
 
+/// Per-query nDCG@10 scores for significance testing
+pub fn per_query_ndcg(
+    results_per_query: &HashMap<String, Vec<String>>,
+    qrels: &HashMap<String, HashMap<String, u32>>,
+) -> Vec<(String, f64)> {
+    let mut scores = Vec::new();
+    for (qid, ranked) in results_per_query {
+        if let Some(q_rels) = qrels.get(qid) {
+            if q_rels.is_empty() { continue; }
+            scores.push((qid.clone(), ndcg_at_k(ranked, q_rels, 10)));
+        }
+    }
+    scores.sort_by(|a, b| a.0.cmp(&b.0)); // deterministic order
+    scores
+}
+
+/// Paired randomization test (two-sided).
+/// Returns p-value: probability that the observed difference arose by chance.
+/// scores_a and scores_b must be aligned (same queries, same order).
+pub fn paired_randomization_test(scores_a: &[f64], scores_b: &[f64], n_permutations: usize) -> f64 {
+    assert_eq!(scores_a.len(), scores_b.len(), "score vectors must be same length");
+    let n = scores_a.len();
+    if n == 0 { return 1.0; }
+
+    let observed_diff: f64 = scores_b.iter().sum::<f64>() / n as f64
+        - scores_a.iter().sum::<f64>() / n as f64;
+    let observed_abs = observed_diff.abs();
+
+    let mut rng_state: u64 = 42; // deterministic seed
+    let mut count_extreme = 0usize;
+
+    for _ in 0..n_permutations {
+        let mut perm_diff = 0.0;
+        for i in 0..n {
+            // Simple LCG PRNG for determinism
+            rng_state = rng_state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            let swap = (rng_state >> 63) == 1;
+            if swap {
+                perm_diff += scores_a[i] - scores_b[i];
+            } else {
+                perm_diff += scores_b[i] - scores_a[i];
+            }
+        }
+        perm_diff /= n as f64;
+        if perm_diff.abs() >= observed_abs {
+            count_extreme += 1;
+        }
+    }
+
+    count_extreme as f64 / n_permutations as f64
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
